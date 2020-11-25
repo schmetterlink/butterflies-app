@@ -1,0 +1,43 @@
+{
+    "name": "kodal.de",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "build": "encore production",
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/preset-react": "^7.12.7",
+        "axios": "^0.21.0",
+        "dropzone": "^5.7.2",
+        "font-awesome": "^4.7.0",
+        "jquery": "^3.5.1",
+        "node-sass": "^4.1.1",
+        "popper.js": "^1.16.1",
+        "prop-types": "^15.7.2",
+        "react-dom": "^17.0.1",
+        "sass": "^1.29.0",
+        "sass-loader": "^7.0.1",
+        "sortablejs": "^1.12.0"
+    },
+    "dependencies": {
+        "@babel/core": "^7.0",
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
+        "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+        "@babel/plugin-transform-runtime": "^7.12.1",
+        "@babel/preset-env": "^7.12.7",
+        "@symfony/webpack-encore": "^0.23.0",
+        "babel-loader": "^8.2.1",
+        "bootstrap": "^4.5.3",
+        "core-js": "2",
+        "encore": "^0.0.30-beta",
+        "react": "^17.0.1",
+        "react-router-dom": "^5.2.0",
+        "webpack-notifier": "^1.6.0"
+    }
+}
