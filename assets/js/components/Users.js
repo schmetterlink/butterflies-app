@@ -24,8 +24,7 @@ class Users extends Component {
                 <section className="row-section">
                     <div className="container">
                         <div className="row">
-                            <h2 className="text-center"><span>List of users</span>Created with <i
-                                className="fa fa-heart"></i> by yemiwebby</h2>
+                            <h2 className="text-center"><span>Butterflies</span></h2>
                         </div>
                         {loading ? (
                             <div className={'row text-center'}>
