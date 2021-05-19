@@ -24,7 +24,7 @@ class Users extends Component {
                 <section className="row-section">
                     <div className="container">
                         <div className="row">
-                            <h2 className="text-center"><span>Butterflies</span></h2>
+                            <h2 className="text-center"><span>Hireflies</span></h2>
                         </div>
                         {loading ? (
                             <div className={'row text-center'}>
