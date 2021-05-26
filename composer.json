@@ -11,6 +11,7 @@
         "aws/aws-sdk-php": "*",
         "eightpoints/guzzle-bundle": "*",
         "jms/serializer-bundle": "*",
+        "lexik/jwt-authentication-bundle": "^2.11",
         "sensio/framework-extra-bundle": "*",
         "stof/doctrine-extensions-bundle": "*",
         "symfony/apache-pack": "*",
