@@ -14,9 +14,9 @@ class Posts extends Component {
     }
 
     getPosts() {
-        axios.get(`https://jsonplaceholder.typicode.com/posts/`).then(res => {
-            const posts = res.data.slice(0,15);
-            this.setState({ posts, loading: false })
+        axios.get(`/api/posts`).then(posts => {
+            this.setState({ posts: posts.data, loading: false})
+            console.log(posts.data);
         })
     }
 
