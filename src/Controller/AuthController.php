@@ -28,9 +28,11 @@ class AuthController extends AbstractController
     {
         $password = $request->get('password');
         $email = $request->get('email');
+        $name = $request->get('name');
         $user = new User();
         $user->setPassword($encoder->encodePassword($user, $password));
         $user->setEmail($email);
+        $user->setName($name);
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
@@ -54,6 +56,7 @@ class AuthController extends AbstractController
         }
         $payload = [
             "user" => $user->getUsername(),
+            "name" => $user->getName(),
             "exp"  => (new \DateTime())->modify("+5 minutes")->getTimestamp(),
         ];
 
