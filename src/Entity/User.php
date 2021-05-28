@@ -35,6 +35,12 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @var string The display name
+     * @ORM\Column(type="string", length=40, unique=false, nullable=true)
+     */
+    private $name;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,10 +95,32 @@ class User implements UserInterface
         return $this->password;
     }
 
+    /**
+     * @param string $password
+     * @return $this
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function setName(string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 

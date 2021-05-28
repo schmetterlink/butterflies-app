@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ApiController extends AbstractController
 {
@@ -18,10 +20,11 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/test", name="testapi")
      */
-    public function test()
+    public function test(Request $request, TokenStorageInterface $tokenStorage)
     {
         return $this->json([
-            'message' => 'test!',
+            'user' => $tokenStorage->getToken(),
+            'message' => 'token storage works!',
         ]);
     }
 }

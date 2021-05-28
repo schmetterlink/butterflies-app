@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DefaultController extends AbstractController
 {
@@ -63,6 +64,16 @@ class DefaultController extends AbstractController
         $response->setContent(json_encode($users));
 
         return $response;
+    }
+    /**
+     * @Route("/dashboard", name="dashboard")
+     * @return JsonResponse|Response
+     */
+    public function dashboard(TokenStorageInterface $tokenStorage)
+    {
+        return $this->render('default/dashboard.html.twig', [
+            'user' => $tokenStorage->getToken(),
+        ]);
     }
     /**
      * @Route("/api/posts", name="posts")
