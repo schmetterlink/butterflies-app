@@ -23,6 +23,11 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
 
     public function __construct(EntityManagerInterface $em, ContainerBagInterface $params)
     {
+        /*
+            inspired by
+            https://smoqadam.me/posts/how-to-authenticate-user-in-symfony-5-by-jwt/
+            https://symfonycasts.com/screencast/symfony-rest4/jwt-guard-authenticator
+        */
         $this->em = $em;
         $this->params = $params;
     }
