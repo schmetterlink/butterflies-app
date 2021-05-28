@@ -9,6 +9,10 @@
         "ext-iconv": "*",
         "api-platform/api-pack": "*",
         "aws/aws-sdk-php": "*",
+        "composer/package-versions-deprecated": "1.11.99.1",
+        "doctrine/doctrine-bundle": "^2.3",
+        "doctrine/doctrine-migrations-bundle": "^3.1",
+        "doctrine/orm": "^2.8",
         "eightpoints/guzzle-bundle": "*",
         "firebase/php-jwt": "^5.2",
         "jms/serializer-bundle": "*",
@@ -20,7 +24,7 @@
         "symfony/flex": "*",
         "symfony/framework-bundle": "*",
         "symfony/monolog-bundle": "*",
-        "symfony/orm-pack": "*",
+        "symfony/proxy-manager-bridge": "^5.2",
         "symfony/security": "*",
         "symfony/swiftmailer-bundle": "*",
         "symfony/var-dumper": "*",
@@ -74,7 +78,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "*",
-        "symfony/maker-bundle": "*",
-        "symfony/dotenv": "*"
+        "symfony/dotenv": "*",
+        "symfony/maker-bundle": "^1.31"
     }
 }
