@@ -4,9 +4,14 @@ import Users from './Users';
 import Posts from './Posts';
 import Dashboard from "./Dashboard";
 import Login from './Login';
-
+import Logout from './Logout';
 
 class Home extends Component {
+    constructor() {
+        super();
+        console.log(window.REACT_SERVER_PROPS);
+        this.state = { user: window.REACT_SERVER_PROPS.user };
+    }
     render() {
         return (
             <div>
@@ -25,9 +30,12 @@ class Home extends Component {
                             <li className="nav-item">
                                 <Link className={"nav-link"} to={"/dashboard"}> Dashboard </Link>
                             </li>
-
                             <li className="nav-item">
+                            {this.state.user === null
+                                ?
                                 <Link className={"nav-link"} to={"/login"}> Login </Link>
+                                : <Link className={"nav-link"} to={"/logout"}> Logout </Link>
+                            }
                             </li>
                         </ul>
                     </div>
@@ -38,6 +46,7 @@ class Home extends Component {
                     <Route path="/posts" component={Posts} />
                     <Route path="/dashboard" component={Dashboard} />
                     <Route path="/login" component={Login} />
+                    <Route path="/logout" component={Logout} />
                 </Switch>
             </div>
         )
