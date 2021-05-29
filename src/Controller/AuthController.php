@@ -46,12 +46,21 @@ class AuthController extends AbstractController
      */
     public function login(Request $request, UserRepository $userRepository, UserPasswordEncoderInterface $encoder)
     {
+        $email = $request->get('email');
+        $password = $request->get('password');
+        if (!$email) {
+            $parameters = json_decode($request->getContent(), true);
+            $email = $parameters['email'] ?: '';
+            $password = $parameters['password'] ?: '';
+        }
         $user = $userRepository->findOneBy([
-            'email'=>$request->get('email'),
+            'email'=>$email,
         ]);
-        if (!$user || !$encoder->isPasswordValid($user, $request->get('password'))) {
+        if (!$user || !$encoder->isPasswordValid($user, $password)) {
             return $this->json([
-                'message' => 'email or password is wrong.',
+                'email' => $email,
+                'password' => $password,
+                'message' => 'email ('.$email.') or password ('.$password.') is wrong.',
             ]);
         }
         $payload = [
