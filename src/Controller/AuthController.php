@@ -7,13 +7,17 @@ use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Firebase\JWT\JWT;
 
 class AuthController extends AbstractController
 {
-    #[Route('/auth', name: 'auth')]
+    /**
+     * @Route("/auth", name="auth", methods={"POST"})
+     */
     public function index(): Response
     {
         return $this->render('auth/index.html.twig', [
@@ -22,7 +26,7 @@ class AuthController extends AbstractController
     }
 
     /**
-     * @Route("/auth/register", name="register", methods={"POST"})
+     * @Route("/auth/register", name="auth_register", methods={"POST"})
      */
     public function register(Request $request, UserPasswordEncoderInterface $encoder)
     {
@@ -40,9 +44,19 @@ class AuthController extends AbstractController
             'user' => $user->getEmail()
         ]);
     }
-
     /**
-     * @Route("/auth/login", name="login", methods={"POST"})
+     * @Route("/auth/logout", name="auth_logout", methods={"POST", "GET"})
+     */
+    public function logout(TokenStorageInterface $tokenStorage, Session $session)
+    {
+        $session->clear();
+        $tokenStorage->setToken();
+        return $this->json([
+            'payload' => $tokenStorage->getToken()
+        ]);
+    }
+    /**
+     * @Route("/auth/login", name="auth_login", methods={"POST"})
      */
     public function login(Request $request, UserRepository $userRepository, UserPasswordEncoderInterface $encoder)
     {
@@ -54,19 +68,19 @@ class AuthController extends AbstractController
             $password = $parameters['password'] ?: '';
         }
         $user = $userRepository->findOneBy([
-            'email'=>$email,
+            'email' => $email,
         ]);
         if (!$user || !$encoder->isPasswordValid($user, $password)) {
             return $this->json([
                 'email' => $email,
                 'password' => $password,
-                'message' => 'email ('.$email.') or password ('.$password.') is wrong.',
+                'message' => 'email (' . $email . ') or password (' . $password . ') is wrong.',
             ]);
         }
         $payload = [
             "user" => $user->getUsername(),
             "name" => $user->getName(),
-            "exp"  => (new \DateTime())->modify("+5 minutes")->getTimestamp(),
+            "exp" => (new \DateTime())->modify("+5 minutes")->getTimestamp(),
         ];
 
 
@@ -76,4 +90,6 @@ class AuthController extends AbstractController
             'token' => sprintf('Bearer %s', $jwt),
         ]);
     }
+
+
 }
