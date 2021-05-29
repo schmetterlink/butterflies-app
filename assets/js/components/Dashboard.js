@@ -1,24 +1,27 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
+import Login from './Login';
 import axios from 'axios';
 
 class Dashboard extends Component {
+
     constructor() {
         super();
-        this.state = { users: [], loading: true};
+        this.state = { users: [], loading: true, token: false};
+        this.setToken = this.setToken.bind(this);
     }
 
-    componentDidMount() {
-        this.getUsers();
-    }
-
-    getUsers() {
-        axios.get(`/api/users`).then(users => {
-            this.setState({ users: users.data, loading: false})
-        })
+    setToken(token) {
+        console.log("setting token "+token);
+        this.setState({token: token});
     }
 
     render() {
+        console.log("token: "+this.state.token);
         const loading = this.state.loading;
+        const token = this.state.token;
+        if(!token) {
+            return <Login setToken={this.setToken} />
+        }
         return(
             <div>
                 <section className="row-section">

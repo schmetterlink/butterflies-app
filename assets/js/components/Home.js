@@ -3,9 +3,10 @@ import {Route, Switch,Redirect, Link, withRouter} from 'react-router-dom';
 import Users from './Users';
 import Posts from './Posts';
 import Dashboard from "./Dashboard";
+import Login from './Login';
+
 
 class Home extends Component {
-
     render() {
         return (
             <div>
@@ -24,6 +25,10 @@ class Home extends Component {
                             <li className="nav-item">
                                 <Link className={"nav-link"} to={"/dashboard"}> Dashboard </Link>
                             </li>
+
+                            <li className="nav-item">
+                                <Link className={"nav-link"} to={"/login"}> Login </Link>
+                            </li>
                         </ul>
                     </div>
                 </nav>
@@ -32,10 +37,13 @@ class Home extends Component {
                     <Route path="/users" component={Users} />
                     <Route path="/posts" component={Posts} />
                     <Route path="/dashboard" component={Dashboard} />
+                    <Route path="/login" component={Login} />
                 </Switch>
             </div>
         )
     }
 }
+
+
 
 export default Home;
