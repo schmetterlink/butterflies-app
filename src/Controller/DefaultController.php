@@ -4,18 +4,46 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Symfony\Component\VarDumper\VarDumper;
 
 class DefaultController extends AbstractController
 {
     /**
+     * @Route("/dashboard", name="dashboard", defaults={"reactRouting": null})
+     */
+    public function dashboard(Request $request, TokenStorageInterface $tokenStorage)
+    {
+        try {
+            $this->denyAccessUnlessGranted('ROLE_USER');
+        } catch (AuthenticationCredentialsNotFoundException $e) {
+            return $this->redirect('/login');
+        }
+        $user = $tokenStorage->getToken();
+        return $this->render('default/dashboard.html.twig', [
+            'user' => $user->getUser()
+        ]);
+    }
+    /**
+     * @Route("/logout", name="logout", defaults={"reactRouting": null})
+     */
+    public function logout(Request $request, TokenStorageInterface $tokenStorage, Session $session)
+    {
+        $tokenStorage->setToken();
+        $session->clear();
+        return $this->redirect('/login');
+    }
+    /**
      * @Route("/{reactRouting}", name="home", defaults={"reactRouting": null})
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->render('default/index.html.twig');
+        return $this->render('default/index.html.twig', ["headers"=>$request->headers] );
     }
     /**
      * @Route("/api/users", name="users")
@@ -66,16 +94,6 @@ class DefaultController extends AbstractController
         return $response;
     }
     /**
-     * @Route("/dashboard", name="dashboard")
-     * @return JsonResponse|Response
-     */
-    public function dashboard(TokenStorageInterface $tokenStorage)
-    {
-        return $this->render('default/dashboard.html.twig', [
-            'user' => $tokenStorage->getToken(),
-        ]);
-    }
-    /**
      * @Route("/api/posts", name="posts")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
@@ -123,4 +141,6 @@ class DefaultController extends AbstractController
 
         return $response;
     }
+
+
 }

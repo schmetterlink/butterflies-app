@@ -1,7 +1,6 @@
 //Login Box
 import React, {Component} from 'react';
 import axios from 'axios';
-import Home from './Home';
 
 class Login extends Component {
 
@@ -30,7 +29,7 @@ class Login extends Component {
             this.setState({ success: true, loading: false, payload: result.data});
             if (result.data.token) {
                 console.log("authentication request granted.");
-                this.props.grantAccess(result.data);
+                window.location.href='dashboard?token='+result.data.token.replace('Bearer ','',1);
             } else {
                 console.warn("authentication request rejected.");
             }

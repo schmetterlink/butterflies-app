@@ -7,6 +7,13 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
+    <script>
+    {% block scripts %}
+        window.REACT_SERVER_PROPS = {
+            user: null
+        };
+    {% endblock %}
+    </script>
     <script src="http://localhost:8097"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700">
