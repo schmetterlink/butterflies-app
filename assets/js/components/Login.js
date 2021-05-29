@@ -14,17 +14,26 @@ class Login extends Component {
         }
     }
 
+    componentWillUnmount() {
+        /*
+        / overwrite setState-method to avoid state updates on unmounted components
+        / as suggested here: https://stackoverflow.com/a/61055910/8800495
+        */
+        this.setState = (state,callback)=>{
+            return null;
+        };
+    }
+
     submitLogin(e) {
-        console.log("submitting the form..");
+        console.log("requesting authentication token..");
         axios.post(`/auth/login`, this.state).then(result => {
-            console.log(this.state);
+            this.setState({ success: true, loading: false, payload: result.data});
             if (result.data.token) {
-                this.props.setToken(result.data.token);
-                this.setState({ success: true, loading: false, token: result.data.token});
+                console.log("authentication request granted.");
+                this.props.grantAccess(result.data);
             } else {
-                this.setState({ result: result.data, success: false, loading: false});
+                console.warn("authentication request rejected.");
             }
-            console.log(this.state);
         })
     }
 
