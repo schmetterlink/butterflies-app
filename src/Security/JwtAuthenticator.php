@@ -16,6 +16,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\VarDumper\VarDumper;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 class JwtAuthenticator extends AbstractGuardAuthenticator
 {
     private $em;
@@ -34,21 +36,18 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
 
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $data = [
-            'token' => $request->headers->all(),
-            'message' => 'Authentication Required'
-        ];
-        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+        return new RedirectResponse('/login');
     }
 
     public function supports(Request $request)
     {
-        return $request->headers->has('Authorization');
+        return  $request->get('token', false) || $request->headers->has('Authorization');
     }
 
     public function getCredentials(Request $request)
     {
-        return $request->headers->get('Authorization');
+        $credentials = $request->headers->get('Authorization') ?: "Bearer ".$request->get('token', false);
+        return $credentials;
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
@@ -81,6 +80,9 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
         ], Response::HTTP_UNAUTHORIZED);
     }
 
+    public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey) {
+    }
+
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
     {
 
@@ -88,6 +90,6 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
 
     public function supportsRememberMe()
     {
-        return false;
+        return true;
     }
 }
