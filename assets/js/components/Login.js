@@ -36,6 +36,20 @@ class Login extends Component {
         })
     }
 
+    submitRegistration(e) {
+        console.log("Register new user..");
+        console.log(this.state);
+        axios.post(`/auth/register`, this.state).then(result => {
+            console.log(result);
+            this.setState({ success: true, loading: false, payload: result.user});
+            if (result.status === 200) {
+                this.submitLogin(e);
+            } else {
+                console.warn("registration rejected.");
+            }
+        })
+    }
+
     handleChange(e) {
         // If you are using babel, you can use ES 6 dictionary syntax
         // let change = { [e.target.name] = e.target.value }
@@ -78,6 +92,13 @@ class Login extends Component {
                         onClick={this
                             .submitLogin
                             .bind(this)}>Login</button>
+
+                    <button
+                        type="button"
+                        className="register-btn"
+                        onClick={this
+                            .submitRegistration
+                            .bind(this)}>Register</button>
                 </div>
             </div>
         );

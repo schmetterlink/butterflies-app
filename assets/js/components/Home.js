@@ -33,7 +33,7 @@ class Home extends Component {
                             <li className="nav-item">
                             {this.state.user === null
                                 ?
-                                <Link className={"nav-link"} to={"/login"}> Login </Link>
+                                <Link className={"nav-link"} to={"/login"}> SignIn </Link>
                                 : <Link className={"nav-link"} to={"/logout"}> Logout </Link>
                             }
                             </li>
