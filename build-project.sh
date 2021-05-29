@@ -11,13 +11,9 @@ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/source
 sudo apt-get update
 sudo apt-get -y install yarn
 yarn install
-yarn encore dev
 
-yarn add jquery --dev
-yarn add bootstrap
-yarn add popper.js --dev
-yarn add font-awesome --dev
-yarn add sass-loader@^7.0.1 --dev
+yarn add --dev react react-dom prop-types axios jquery popper.js font-awesome sass-loader@^7.0.1 @babel/preset-react dropzone sortablejs
+yarn add bootstrap @babel/core@^7.0 core-js@2 babel-loader @babel/preset-env @babel/plugin-proposal-class-properties @babel/plugin-transform-runtime @babel/plugin-syntax-dynamic-import react-router-dom @material-ui/core
 
 ## sass is supposed to deliver better results than node-sass
 yarn add node-sass@^4.1.1 --dev
@@ -25,19 +21,9 @@ yarn add node-sass@^4.1.1 --dev
 # so at a later stage, try to use sass instead of node-sass
 # yarn add sass --dev
 
-yarn add @babel/core@^7.0
-yarn add @babel/preset-react --dev
-yarn add react-router-dom
-yarn add --dev react react-dom prop-types axios
-yarn add @babel/plugin-proposal-class-properties @babel/plugin-transform-runtime @babel/plugin-syntax-dynamic-import
-yarn add babel-loader @babel/preset-env
-
-yarn add core-js@2
-
-yarn add dropzone sortablejs --dev
-
 composer update
 composer install
 
 yarn build
+yarn encore dev
 #composer create-project symfony/website-skeleton .
