@@ -20,9 +20,16 @@ security:
             anonymous: true
             lazy: true
             provider: app_user_provider
+        dashboard:
+            pattern: ^/dashboard
+            stateless: false
+            guard:
+                authenticators:
+                    - App\Security\JwtAuthenticator
         acl:
             # these routes are only accessible for authenticated users
-            pattern: ^/api
+            pattern: ^/(api)
+            stateless: false
             guard:
                 authenticators:
                     - App\Security\JwtAuthenticator
