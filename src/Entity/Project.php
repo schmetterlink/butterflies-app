@@ -33,6 +33,16 @@ class Project
     private $description;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $startedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $terminatedAt;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -46,16 +56,6 @@ class Project
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $deletedAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $startAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $terminateAt;
 
     public function getId(): ?int
     {
@@ -99,6 +99,30 @@ class Project
         return $this;
     }
 
+    public function getStartedAt(): ?\DateTimeInterface
+    {
+        return $this->startedAt;
+    }
+
+    public function setStartedAt(?\DateTimeInterface $startedAt): self
+    {
+        $this->startedAt = $startedAt;
+
+        return $this;
+    }
+
+    public function getTerminatedAt(): ?\DateTimeInterface
+    {
+        return $this->terminatedAt;
+    }
+
+    public function setTerminatedAt(?\DateTimeInterface $terminatedAt): self
+    {
+        $this->terminatedAt = $terminatedAt;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -135,27 +159,4 @@ class Project
         return $this;
     }
 
-    public function getStartAt(): ?\DateTimeInterface
-    {
-        return $this->startAt;
-    }
-
-    public function setStartAt(?\DateTimeInterface $startAt): self
-    {
-        $this->startAt = $startAt;
-
-        return $this;
-    }
-
-    public function getTerminateAt(): ?\DateTimeInterface
-    {
-        return $this->terminateAt;
-    }
-
-    public function setTerminateAt(?\DateTimeInterface $terminateAt): self
-    {
-        $this->terminateAt = $terminateAt;
-
-        return $this;
-    }
 }
