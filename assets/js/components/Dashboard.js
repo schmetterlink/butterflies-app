@@ -7,12 +7,28 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import NestedList from '../classes/NestedList';
 import { Redirect } from 'react-router';
+import {Link} from "react-router-dom";
+import axios from 'axios';
 
 class Dashboard extends Component {
 
     constructor() {
         super();
-        this.state = { user: window.REACT_SERVER_PROPS.user, loading: true, token: false, data: false};
+        this.state = { user: window.REACT_SERVER_PROPS.user, loading: true, token: window.REACT_SERVER_PROPS.token, data: false};
+    }
+
+    callApi(target, method = "GET") {
+        let uri="/api/"+target;
+        console.log("trigger "+method+" request to API ("+uri+") with token "+this.state.token);
+        axios.post(
+            uri,
+            {title: 'TestTest', description: 'description'},
+            {headers: {'Authorization': `Bearer ${this.state.token}`}}
+        ).then(result => {
+            this.setState({ success: true, loading: false, payload: result.data});
+            console.log(result.data);
+        })
+        return null;
     }
 
     render() {
