@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use Doctrine\ORM\EntityManager;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,55 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Project
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $userId;
-
-    /**
-     * @ORM\Column(type="string", length=60)
-     */
-    private $title;
-
-    /**
-     * @ORM\Column(type="string", length=250, nullable=true)
-     */
-    private $description;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $startedAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $terminatedAt;
-
-    /**
-     * @var \DateTime $createdAt
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="update")
-     */
-    private $updatedAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $deletedAt;
+    use Mapping\ProjectTrait;
 
     public function getId(): ?int
     {
