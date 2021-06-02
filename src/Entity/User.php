@@ -99,6 +99,18 @@ class User implements UserInterface
         return $this;
     }
 
+
+    /**
+     * @Serializer\VirtualProperty
+     * @Serializer\SerializedName("projects")
+     * @Serializer\Groups({"admin", "list", "detail"})
+     *
+     * @return Collection
+     */
+    public function getProjects() {
+        return $this->projects;
+    }
+
     /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
