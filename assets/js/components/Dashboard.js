@@ -4,6 +4,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import NestedList from '../classes/NestedList';
 import { Redirect } from 'react-router';
@@ -51,6 +52,7 @@ class Dashboard extends Component {
                     </TableHead>
                 </Table>
                 <div>{ new NestedList().renderData("data", this.state.user) }</div>
+                <div><Button variant="contained" color="primary" onClick={this.callApi.bind(this,"project", "POST")}>create Project</Button></div>
             </Paper>
         )
     }
