@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+
 
 /**
  * @ORM\Entity(repositoryClass=ProjectRepository::class)
@@ -43,12 +45,15 @@ class Project
     private $terminatedAt;
 
     /**
+     * @var \DateTime $createdAt
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
