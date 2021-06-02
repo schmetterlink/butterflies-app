@@ -84,6 +84,7 @@ class AuthController extends AbstractController
             ]);
         }
         $payload = [
+            "uid" => $user->getId(),
             "user" => $user->getUsername(),
             "name" => $user->getName(),
             "exp" => (new \DateTime())->modify("+5 minutes")->getTimestamp(),
