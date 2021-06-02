@@ -20,7 +20,6 @@ class Project
         return $this->id;
     }
 
-
     public function getUserId(): ?int
     {
         return $this->userId;
@@ -116,5 +115,13 @@ class Project
 
         return $this;
     }
-
+    /**
+     * Project constructor.
+     */
+    public function __construct(User $user, $title = '', $description = '')
+    {
+        $this->user = $user;
+        $this->setTitle($title);
+        $this->setDescription($description);
+    }
 }
