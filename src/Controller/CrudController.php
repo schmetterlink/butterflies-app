@@ -23,10 +23,9 @@ class CrudController
     {
         /** @var Entity\User $user */
         $user = $tokenStorage->getToken()->getUser();
-        $uid = $user->getId();
 
         /** @var Entity\Project $project */
-        $project = new Entity\Project();
+        $project = new Entity\Project($user);
 
         $values = $request->request->all() ?: $request->toArray();
 
@@ -34,7 +33,7 @@ class CrudController
             $methodName = "set".ucfirst($key);
             $project->$methodName($value);
         }
-        $project->setUserId($uid);
+        $project->setUserId($user->getId());
 
         $manager->persist($project);
         $manager->flush();
