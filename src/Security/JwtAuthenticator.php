@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Firebase\JWT\JWT;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,11 +19,20 @@ use Symfony\Component\VarDumper\VarDumper;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+/**
+ * Class JwtAuthenticator
+ * @package App\Security
+ */
 class JwtAuthenticator extends AbstractGuardAuthenticator
 {
     private $em;
     private $params;
 
+    /**
+     * JwtAuthenticator constructor.
+     * @param EntityManagerInterface $em
+     * @param ContainerBagInterface $params
+     */
     public function __construct(EntityManagerInterface $em, ContainerBagInterface $params)
     {
         /*
@@ -34,24 +44,43 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
         $this->params = $params;
     }
 
+    /**
+     * @param Request $request
+     * @param AuthenticationException|null $authException
+     * @return RedirectResponse
+     */
     public function start(Request $request, AuthenticationException $authException = null)
     {
         return new RedirectResponse('/login');
     }
 
-    public function supports(Request $request)
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function supports(Request $request): bool
     {
-        return  $request->get('token', false) || $request->headers->has('Authorization');
+        return  $request->get('token', false) !== false || $request->headers->has('Authorization');
     }
 
-    public function getCredentials(Request $request)
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function getCredentials(Request $request): string
     {
         $credentials = $request->headers->get('Authorization') ?: $request->get('token', false);
         $credentials = str_replace('Bearer ', '', $credentials);
         return $credentials;
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    /**
+     * @param mixed $credentials
+     * @param UserProviderInterface $userProvider
+     * @return User
+     * @throws AuthenticationException
+     */
+    public function getUser($credentials, UserProviderInterface $userProvider): User
     {
         try {
             $jwt = (array) JWT::decode(
@@ -59,20 +88,32 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
                 $this->params->get('jwt_secret'),
                 ['HS256']
             );
-            return $this->em->getRepository(User::class)
+            /** @var User $user */
+            $user = $this->em->getRepository(User::class)
                 ->findOneBy([
                     'email' => $jwt['user'],
                 ]);
+            return $user;
         }catch (\Exception $exception) {
             throw new AuthenticationException($exception->getMessage());
         }
     }
 
-    public function checkCredentials($credentials, UserInterface $user)
+    /**
+     * @param mixed $credentials
+     * @param UserInterface $user
+     * @return bool
+     */
+    public function checkCredentials($credentials, UserInterface $user): bool
     {
         return true;
     }
 
+    /**
+     * @param Request $request
+     * @param AuthenticationException $exception
+     * @return JsonResponse
+     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         return new JsonResponse([
@@ -80,14 +121,28 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
         ], Response::HTTP_UNAUTHORIZED);
     }
 
+    /**
+     * @param TokenInterface $token
+     * @param UserProviderInterface $userProvider
+     * @param $providerKey
+     */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey) {
     }
 
+    /**
+     * @param Request $request
+     * @param TokenInterface $token
+     * @param string $providerKey
+     * @return Response|void|null
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
     {
 
     }
 
+    /**
+     * @return bool
+     */
     public function supportsRememberMe()
     {
         return true;
