@@ -18,7 +18,7 @@ class Dashboard extends Component {
         this.state = { user: window.REACT_SERVER_PROPS.user, loading: true, token: window.REACT_SERVER_PROPS.token, data: false};
     }
 
-    callApi(target, method = "GET") {
+    callApi(target, method = "GET", callback = null) {
         let uri="/api/"+target;
         console.log("trigger "+method+" request to API ("+uri+") with token "+this.state.token);
         axios.post(
@@ -26,8 +26,12 @@ class Dashboard extends Component {
             {title: 'TestTest', description: 'description'},
             {headers: {'Authorization': `Bearer ${this.state.token}`}}
         ).then(result => {
-            this.setState({ success: true, loading: false, payload: result.data});
-            console.log(result.data);
+            if (callback === null) {
+                this.setState({ success: true, loading: false, payload: result.data});
+                console.log(result.data);
+            } else {
+                callback(result.data, this);
+            }
         })
         return null;
     }
