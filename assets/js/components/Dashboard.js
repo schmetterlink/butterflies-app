@@ -35,7 +35,14 @@ class Dashboard extends Component {
         })
         return null;
     }
-
+    componentDidMount() {
+        let callback = function(data, that) {
+            console.log("callback yay!");
+            that.setState({ success: true, loading: false, userData: JSON.parse(data)});
+            console.log(data);
+        }
+        this.callApi("me", "GET", callback);
+    }
     render() {
         if(!this.state.user) {
             return <Redirect to={"/login"} />
@@ -57,6 +64,15 @@ class Dashboard extends Component {
                 </Table>
                 <div>{ new NestedList().renderData("data", this.state.user) }</div>
                 <div><Button variant="contained" color="primary" onClick={this.callApi.bind(this,"project", "POST")}>create Project</Button></div>
+                {loading ? (
+                    <div className={'row text-center'}>
+                        <span className="fa fa-spin fa-spinner fa-4x"></span>
+                    </div>
+                ) : (
+                    <div>
+                        { new NestedList().renderData("data", {projects: this.state.userData.projects}) }
+                    </div>
+                )}
             </Paper>
         )
     }
