@@ -63,7 +63,7 @@ class NestedList {
                         cname = "field-list";
                     }
                     if (typeof object[key] == 'object') {
-                        console.log(cname);
+                        console.debug(cname);
                         cols.push(<TableCell className={cname} title={key} key={prefix+"-cell-"+key}>{this.renderObject(prefix, object[key],"sublist-item", level + 1)}</TableCell>)
                     } else {
                         cols.push(<TableCell className={cname} title={key} key={prefix+"-cell-"+key}>{object[key]}</TableCell>)
@@ -110,7 +110,7 @@ class NestedList {
 
     renderRows(prefix, rows, classes, level, maxdepth) {
         let tableRows = [];
-        console.log("rendering ["+rows.length+"] rows");
+        console.debug("rendering ["+rows.length+"] rows");
         for (let row in rows) {
             let cname = "field-row-"+row;
             if (typeof rows[row] == 'object' && rows[row] !== undefined) {
