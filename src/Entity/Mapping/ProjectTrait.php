@@ -4,11 +4,14 @@
 namespace App\Entity\Mapping;
 
 use App\Entity\User;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Project
  *
  * @ORM\Table("project")
+ * @Serializer\ExclusionPolicy("all")
+ *
  */
 trait ProjectTrait
 {
@@ -64,17 +67,23 @@ trait ProjectTrait
      * @var \DateTime $createdAt
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
+     * @Serializer\SerializedName("created")
+     * @Serializer\Groups({"admin", "detail"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
+     * @Serializer\Groups({"admin"})
+     *
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Serializer\SerializedName("deleted")
+     * @Serializer\Groups({"admin"})
      */
     private $deletedAt;
 }
