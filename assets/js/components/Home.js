@@ -16,7 +16,8 @@ class Home extends Component {
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <Link className={"navbar-brand"} to={"/"}> Hirefly.de </Link>
+
+                    <Link className={"navbar-brand"} to={"/"}><img src={'/build/images/ci/hirefly-final-magenta-black-matte-animated.gif'} alt='hirefly.de' /></Link>
                     <div className="collapse navbar-collapse" id="navbarText">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item">
