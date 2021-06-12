@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Mapping\TimestampTrait;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Project
 {
-    use Mapping\ProjectTrait;
+    use Mapping\ProjectTrait, TimestampTrait;
 
     public function getId(): ?int
     {
@@ -92,29 +93,6 @@ class Project
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeInterface
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
     /**
      * Project constructor.
      */

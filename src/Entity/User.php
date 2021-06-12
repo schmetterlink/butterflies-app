@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Mapping\TimestampTrait;
 use App\Entity\Mapping\UserTrait;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -15,7 +16,7 @@ use JMS\Serializer\Annotation as Serializer;
  */
 class User implements UserInterface
 {
-    use UserTrait;
+    use UserTrait, TimestampTrait;
 
     public function getId(): ?int
     {
@@ -102,7 +103,6 @@ class User implements UserInterface
 
 
     /**
-     * @Serializer\VirtualProperty
      * @Serializer\SerializedName("projects")
      * @Serializer\Groups({"admin", "list", "detail"})
      *
