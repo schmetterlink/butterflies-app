@@ -19,12 +19,10 @@
 body {
     background-color: lightgray;
 }
-.navbar-brand, .navbar-expand-lg {
-/*
-    background-color: #000;
-*/
+.navbar-brand {
+    width: 50px;
 }
 .navbar-brand img {
-    width: 10%;
-    height: 10%;
+    width: 100%;
+    height: 100%;
 }
