@@ -4,13 +4,12 @@
 namespace App\Entity\Mapping;
 
 use App\Entity\User;
-use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation as Serializer;
 
 /**
  * Project
  *
  * @ORM\Table("project")
- * @Serializer\ExclusionPolicy("all")
  *
  */
 trait ProjectTrait
@@ -19,6 +18,7 @@ trait ProjectTrait
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Serializer\Groups ({"admin", "detail", "list"})
      */
     private $id;
 
@@ -45,45 +45,26 @@ trait ProjectTrait
 
     /**
      * @ORM\Column(type="string", length=60)
+     * @Serializer\Groups ({"admin", "detail", "list"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
+     * @Serializer\Groups ({"admin", "detail", "list"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Serializer\Groups ({"admin", "detail", "list"})
      */
     private $startedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Serializer\Groups ({"admin", "detail", "list"})
      */
     private $terminatedAt;
 
-    /**
-     * @var \DateTime $createdAt
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     * @Serializer\SerializedName("created")
-     * @Serializer\Groups({"admin", "detail"})
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="update")
-     * @Serializer\Groups({"admin"})
-     *
-     */
-    private $updatedAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Serializer\SerializedName("deleted")
-     * @Serializer\Groups({"admin"})
-     */
-    private $deletedAt;
 }
