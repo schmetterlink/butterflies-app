@@ -4,8 +4,13 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableHead from "@material-ui/core/TableHead";
 import React from "react";
+import Button from "@material-ui/core/Button";
 
 class NestedList {
+    actions = undefined;
+    constructor(actions) {
+        this.actions = actions;
+    }
     renderData(prefix, data, classes) {
         let props = [];
         let relations = [];
@@ -107,6 +112,18 @@ class NestedList {
             return (<Table className={classes+" flatTable level-"+level}><TableBody><TableRow><TableCell>{object}</TableCell></TableRow></TableBody></Table>)
         }
     }
+    editEntry(data, actionName = "edit", event = undefined) {
+        console.debug(actionName);
+        if (this.actions) {
+            if (this.actions[actionName]) {
+                this.actions[actionName](data, actionName, event);
+            } else {
+                this.actions(data, actionName, event);
+            }
+
+        }
+
+    }
 
     renderRows(prefix, rows, classes, level, maxdepth) {
         let tableRows = [];
@@ -128,6 +145,7 @@ class NestedList {
                         cols.push(<TableCell className={cname} title={key} key={prefix+"-cell-"+key}>{object}</TableCell>)
                     }
                 }
+                cols.push(<TableCell><Button variant="contained" color="primary" onClick={this.editEntry.bind(this,rows[row],"edit")}>edit</Button><Button variant="contained" color="primary" onClick={this.editEntry.bind(this,rows[row],"delete")}>delete</Button></TableCell>);
                 tableRows.push(<TableRow key={prefix+"-list-"+row}>{cols}</TableRow>);
             } else {
                 tableRows.push(<TableRow key={prefix+"-list-"+row}><TableCell className={cname} title={"#"+(row+1)}>{rows[row]}</TableCell></TableRow>)
