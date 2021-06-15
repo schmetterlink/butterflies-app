@@ -36,10 +36,11 @@ trait TimestampTrait
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt($createdAt): self
     {
-        $this->createdAt = $createdAt;
-
+        if ($createdAt instanceof \DateTimeInterface) {
+            $this->createdAt = $createdAt;
+        }
         return $this;
     }
 
@@ -48,10 +49,11 @@ trait TimestampTrait
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt($updatedAt): self
     {
-        $this->updatedAt = $updatedAt;
-
+        if ($updatedAt instanceof \DateTimeInterface) {
+            $this->updatedAt = $updatedAt;
+        }
         return $this;
     }
 
