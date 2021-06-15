@@ -32,7 +32,8 @@ class Network {
         this.state.loading = true;
         let uri="/api/"+target;
         console.debug("trigger "+method+" request to API ("+uri+") with token "+this.token);
-        axios.post(
+        console.debug(data);
+        axios[method.toLowerCase()](
             uri,
             data,
             {headers: {'Authorization': `Bearer ${this.token}`}}
