@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { Redirect } from 'react-router';
 import {Link} from "react-router-dom";
-import axios from 'axios';
 import NestedList from "../classes/NestedList";
 import Network from "../classes/Network";
 
@@ -53,10 +52,25 @@ class Dashboard extends Component {
     editProfile() {
         console.debug("edit user profile");
     }
+    editProject(data, action, event) {
+        if (action === "delete") {
+            var that = this;
+            let callback = function(data) {
+                console.debug("project has been deleted.");
+                that.getUserData();
+            }
+            this.network.callApi("project/"+data.id, undefined, "DELETE", callback);
+        }
+        if (action === "edit") {
+            this.network.callApi("project", data, "PUT");
+        }
+        console.debug(action + " project #"+data.id);
+    }
     render() {
         if(!this.state.user || this.state.status === 401) {
             return <Redirect to={"/login"} />
         }
+        let callbacks = this.editProject.bind(this);
         this.title = "Welcome "+this.state.user.name;
         const loading = this.state.loading;
         return(
@@ -79,7 +93,7 @@ class Dashboard extends Component {
                     </div>
                 ) : (
                     <div>
-                        { new NestedList().renderData("data", {projects: this.state.userData.projects}) }
+                        { new NestedList(callbacks).renderData("data", {projects: this.state.userData.projects}) }
                     </div>
                 )}
                 <div>
