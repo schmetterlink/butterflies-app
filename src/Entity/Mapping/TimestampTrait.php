@@ -38,6 +38,9 @@ trait TimestampTrait
 
     public function setCreatedAt($createdAt): self
     {
+        if (is_string($createdAt)) {
+            $this->createdAt = new \DateTime($createdAt);
+        }
         if ($createdAt instanceof \DateTimeInterface) {
             $this->createdAt = $createdAt;
         }

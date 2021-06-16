@@ -62,10 +62,14 @@ class Project
         return $this->startedAt;
     }
 
-    public function setStartedAt(?\DateTimeInterface $startedAt): self
+    public function setStartedAt($startedAt): self
     {
-        $this->startedAt = $startedAt;
-
+        if (is_string($startedAt)) {
+            $this->startedAt = new \DateTime($startedAt);
+        }
+        if ($startedAt instanceof \DateTimeInterface) {
+            $this->startedAt = $startedAt;
+        }
         return $this;
     }
 
@@ -74,10 +78,14 @@ class Project
         return $this->terminatedAt;
     }
 
-    public function setTerminatedAt(?\DateTimeInterface $terminatedAt): self
+    public function setTerminatedAt($terminatedAt): self
     {
-        $this->terminatedAt = $terminatedAt;
-
+        if (is_string($terminatedAt)) {
+            $this->terminatedAt = new \DateTime($terminatedAt);
+        }
+        if ($terminatedAt instanceof \DateTimeInterface) {
+            $this->terminatedAt = $terminatedAt;
+        }
         return $this;
     }
 
