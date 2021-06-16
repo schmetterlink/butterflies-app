@@ -51,7 +51,7 @@ class ApiController extends AbstractController
         ]);
     }
     /**
-     * @Route("/api/test", name="testapi")
+     * @Route("/api/test", name="api_test")
      */
     public function test(Request $request, TokenStorageInterface $tokenStorage)
     {
@@ -61,17 +61,14 @@ class ApiController extends AbstractController
         ]);
     }
     /**
-     * @Route("/api/me", name="testapi")
+     * @Route("/api/me", name="api_me")
      */
     public function me(Request $request, TokenStorageInterface $tokenStorage): JsonResponse
     {
-
         //$user = $this->serializer->normalize($this->user, null, ['groups' => 'list']);
 
         //$user = $this->serializer->normalize($user, null, $defaultContext);
-
         $userData = $this->serializer->serialize($this->user, 'json', ['groups' => 'list']);
-
         $response = new JsonResponse($userData);
         return $response;
     }
