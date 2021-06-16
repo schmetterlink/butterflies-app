@@ -7,9 +7,11 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 
 class NestedList {
-    actions = undefined;
-    constructor(actions) {
-        this.actions = actions;
+    actionCallbackFunction = undefined;
+    availableActions = [];
+    constructor(actionCallbackFunction, availableActions = ["edit", "delete"]) {
+        this.actionCallbackFunction = actionCallbackFunction;
+        this.availableActions = availableActions;
     }
     renderData(prefix, data, classes) {
         let props = [];
@@ -113,12 +115,12 @@ class NestedList {
         }
     }
     editEntry(data, actionName = "edit", event = undefined) {
-        console.debug(actionName);
-        if (this.actions) {
-            if (this.actions[actionName]) {
-                this.actions[actionName](data, actionName, event);
+        console.debug("trigger callback function for "+actionName);
+        if (this.actionCallbackFunction) {
+            if (this.actionCallbackFunction[actionName]) {
+                this.actionCallbackFunction[actionName](data, actionName, event);
             } else {
-                this.actions(data, actionName, event);
+                this.actionCallbackFunction(data, actionName, event);
             }
 
         }
@@ -145,7 +147,12 @@ class NestedList {
                         cols.push(<TableCell className={cname} title={key} key={prefix+"-cell-"+key}>{object}</TableCell>)
                     }
                 }
-                cols.push(<TableCell><Button variant="contained" color="primary" onClick={this.editEntry.bind(this,rows[row],"edit")}>edit</Button><Button variant="contained" color="primary" onClick={this.editEntry.bind(this,rows[row],"delete")}>delete</Button></TableCell>);
+                let actionButtons = [];
+                for (const actionKey in this.availableActions) {
+                    let action = this.availableActions[actionKey];
+                    actionButtons.push(<Button variant="contained" color="primary" onClick={this.editEntry.bind(this,rows[row],action)}>{action}</Button>);
+                }
+                cols.push(<TableCell>{actionButtons}</TableCell>);
                 tableRows.push(<TableRow key={prefix+"-list-"+row}>{cols}</TableRow>);
             } else {
                 tableRows.push(<TableRow key={prefix+"-list-"+row}><TableCell className={cname} title={"#"+(row+1)}>{rows[row]}</TableCell></TableRow>)
