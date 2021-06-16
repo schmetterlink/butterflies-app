@@ -113,6 +113,7 @@ class EditorNaked extends React.Component {
                         </Table>
                             <Button type="submit" variant="contained" color="primary">save</Button>
                             <Button variant="contained" color="primary" onClick={this.resetData.bind(this)}>reset</Button>
+                            <Button variant="contained" color="secondary" onClick={this.handleClose.bind(this)}>X</Button>
                         </form>
                         <div>{/* new NestedList().renderData("data", this.state.data) */}
                         </div>
