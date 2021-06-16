@@ -9,7 +9,7 @@ import Button from "@material-ui/core/Button";
 class NestedList {
     actionCallbackFunction = undefined;
     availableActions = [];
-    constructor(actionCallbackFunction, availableActions = ["edit", "delete"]) {
+    constructor(actionCallbackFunction, availableActions = {edit: "primary", delete: "secondary"}) {
         this.actionCallbackFunction = actionCallbackFunction;
         this.availableActions = availableActions;
     }
@@ -149,8 +149,8 @@ class NestedList {
                 }
                 let actionButtons = [];
                 for (const actionKey in this.availableActions) {
-                    let action = this.availableActions[actionKey];
-                    actionButtons.push(<Button variant="contained" color="primary" onClick={this.editEntry.bind(this,rows[row],action)}>{action}</Button>);
+                    let config = this.availableActions[actionKey];
+                    actionButtons.push(<Button variant="contained" color={config} onClick={this.editEntry.bind(this,rows[row],actionKey)}>{actionKey}</Button>);
                 }
                 cols.push(<TableCell>{actionButtons}</TableCell>);
                 tableRows.push(<TableRow key={prefix+"-list-"+row}>{cols}</TableRow>);
