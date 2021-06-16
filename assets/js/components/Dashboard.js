@@ -120,7 +120,7 @@ class Dashboard extends Component {
                     </div>
                 ) : (
                     <div>
-                        { new NestedList(callbacks,["edit","delete"]).renderData("data", {projects: this.state.userData.projects}) }
+                        { new NestedList(callbacks,{edit:"primary",delete:"secondary"}).renderData("data", {projects: this.state.userData.projects}, "alternateRows") }
                     </div>
                 )}
                 <div>
