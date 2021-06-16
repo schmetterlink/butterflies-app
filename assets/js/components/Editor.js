@@ -16,6 +16,7 @@ function getModalStyle() {
     const left = 40;
 
     return {
+        position: `fixed`,
         top: `${top}%`,
         left: `${left}%`,
         transform: `translate(-${top}%, -${left}%)`,
