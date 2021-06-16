@@ -10,14 +10,18 @@ import { Redirect } from 'react-router';
 import {Link} from "react-router-dom";
 import NestedList from "../classes/NestedList";
 import Network from "../classes/Network";
+import Editor from "./Editor";
 
 class Dashboard extends Component {
     network = undefined;
+    editor = undefined;
     constructor() {
         super();
         this.state = {
-            user: window.REACT_SERVER_PROPS.user
+            user: window.REACT_SERVER_PROPS.user,
+            editMode: false
         };
+        this.editorRef = React.createRef();
         this.network = new Network(this, window.REACT_SERVER_PROPS.token);
     }
     componentDidCatch(error, info) {
@@ -33,12 +37,12 @@ class Dashboard extends Component {
     getUserData() {
         var that = this;
         let callback = function(data) {
-            let userData = JSON.parse(data);
             console.debug(data);
+            let userData = JSON.parse(data);
             console.debug("successfully retrieved user data with ["+userData.projects.length+"] projects");
             that.setState({ status: data.status, success: true, loading: false, userData: userData});
         }
-        this.network.callApi("me", undefined,"GET", callback);
+        this.network.callApi("me", undefined,"POST", callback);
     }
     createProject() {
         console.debug("creating project");
@@ -53,18 +57,41 @@ class Dashboard extends Component {
         console.debug("edit user profile");
     }
     editProject(data, action, event) {
+        var that = this;
+        let callback = function(data) {
+            console.debug("project has been "+action+"d.");
+            that.getUserData();
+        }
         if (action === "delete") {
-            var that = this;
-            let callback = function(data) {
-                console.debug("project has been deleted.");
-                that.getUserData();
-            }
             this.network.callApi("project/"+data.id, undefined, "DELETE", callback);
         }
         if (action === "edit") {
-            this.network.callApi("project", data, "PUT");
+            if (this.editorRef.current.state.data === data) {
+                this.editorRef.current.toggle();
+            } else {
+                this.editorRef.current.handleOpen();
+                this.editorRef.current.setData(data);
+            }
+            //data.description += " edited";
+            //this.network.callApi("project/"+data.id, data, "PUT", callback);
         }
         console.debug(action + " project #"+data.id);
+    }
+    submitChanges(data, entity, event) {
+        console.debug("submitting changes for entity "+entity+"...");
+        console.debug(data);
+        let that = this;
+        let callback = function (data) {
+            console.debug("data has been successfully persisted");
+            that.editorRef.current.handleClose();
+            that.getUserData();
+        }
+        let errorCallback = function (error) {
+            console.error("an error has occurred while trying to persist data");
+            that.setState({status: error.response.status});
+            console.error(error.response);
+        }
+        this.network.callApi(entity+"/"+data.id, data, "PUT", callback, errorCallback);
     }
     render() {
         if(!this.state.user || this.state.status === 401) {
@@ -93,13 +120,14 @@ class Dashboard extends Component {
                     </div>
                 ) : (
                     <div>
-                        { new NestedList(callbacks).renderData("data", {projects: this.state.userData.projects}) }
+                        { new NestedList(callbacks,["edit","delete"]).renderData("data", {projects: this.state.userData.projects}) }
                     </div>
                 )}
                 <div>
                 <Button variant="contained" color="primary" onClick={this.createProject.bind(this)}>create Project</Button>
                 <Button variant="contained" color="primary" onClick={this.editProfile.bind(this)}>edit Profile</Button>
                 </div>
+                <Editor ref={this.editorRef} entity={"project"} submitCallback={this.submitChanges.bind(this)}/>
             </Paper>
         )
     }
