@@ -36,7 +36,7 @@ const styles = theme => ({
 class EditorNaked extends React.Component {
     constructor(props) {
         super(props);
-
+        this.childkey = 0;
         this.state = {
             open: false,
             data: undefined
@@ -70,7 +70,8 @@ class EditorNaked extends React.Component {
             data = this.state.data;
         }
         let tableRows = [];
-        console.debug("rendering ["+data.length+"] rows");
+        console.debug("creating input fields for data");
+        console.debug(data);
         for (let row in data) {
             let cname = "field-row-" + row;
             tableRows.push(
@@ -97,11 +98,12 @@ class EditorNaked extends React.Component {
     }
 
     render() {
+        ++this.childkey;
         const {classes} = this.props;
         return (
             this.state.open ? (
-                    <div style={getModalStyle()} className={classes.paper}>
-                        <form method="PUT" onSubmit={this.submitData.bind(this)}>
+                    <div style={getModalStyle()} className={classes.paper} key={"editor-"+this.childkey}>
+                        <form id={"edit-"+this.props.entity+"-"+this.state.data.id} method="PUT" onSubmit={this.submitData.bind(this)}>
                         <Table>
                             <TableHead><TableRow><TableCell>Editor</TableCell></TableRow></TableHead>
                             <TableBody>
