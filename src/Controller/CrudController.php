@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Validator\Constraints\Json;
 use Symfony\Component\VarDumper\VarDumper;
 
 class CrudController extends AbstractController
@@ -62,7 +63,15 @@ class CrudController extends AbstractController
         /** @var \Doctrine\ORM\Mapping\Entity $entity */
         $entity = $this->getDoctrine()->getRepository($entityClassName)->find($id);
 
+        if (!$entity) {
+            return new JsonResponse(["error"=>"resource is not available"], 404);
+        }
+
         $values = $request->request->all() ?: $request->toArray();
+
+        if (isset($values['id']) && $values['id'] != $entity->getId()) {
+            return new JsonResponse(["error"=>"data manipulation error: primary keys may not be altered"], 400);
+        }
 
         foreach ($values as $key=>$value) {
             $methodName = "set".ucfirst($key);
@@ -81,7 +90,7 @@ class CrudController extends AbstractController
         /** TODO: check permissions and ownership before updating entity */
         $manager->persist($entity);
         $manager->flush();
-        return new JsonResponse($entity);
+        return new JsonResponse($entity, 201);
 
     }
     private function getEntityClassName($entityName):? string {
