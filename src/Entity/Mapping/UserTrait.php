@@ -55,6 +55,12 @@ trait UserTrait
      */
     private $projects;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\File", mappedBy="user", fetch="EAGER")
+     * @Groups ({"admin", "detail"})
+     */
+    private $files;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();

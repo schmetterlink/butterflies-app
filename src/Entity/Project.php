@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Mapping\OwnedTrait;
+use App\Entity\Mapping\ProjectTrait;
 use App\Entity\Mapping\TimestampTrait;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManager;
@@ -14,23 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Project
 {
-    use Mapping\ProjectTrait, TimestampTrait;
+    use ProjectTrait, OwnedTrait, TimestampTrait;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(int $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
     }
 
     public function getTitle(): ?string
