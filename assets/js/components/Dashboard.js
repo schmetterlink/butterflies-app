@@ -66,6 +66,7 @@ class Dashboard extends Component {
             this.network.callApi("project/"+data.id, undefined, "DELETE", callback);
         }
         if (action === "edit") {
+            this.editorRef.current.setEntity("project",data.id, ["id", "createdAt"]);
             if (this.editorRef.current.state.data === data) {
                 this.editorRef.current.toggle();
             } else {
@@ -141,7 +142,7 @@ class Dashboard extends Component {
                 <div>
                 <Button variant="contained" color="primary" onClick={this.createProject.bind(this)}>create Project</Button>
                 </div>
-                <Editor ref={this.editorRef} entity={"project"} submitCallback={this.submitChanges.bind(this)}/>
+                <Editor ref={this.editorRef} submitCallback={this.submitChanges.bind(this)}/>
             </Paper>
         )
     }
