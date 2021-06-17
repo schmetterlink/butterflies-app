@@ -18,14 +18,14 @@ trait UserTrait
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups ({"admin", "list"})
+     * @Groups ({"admin", "list", "detail"})
      *
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups ({"admin", "detail"})
+     * @Groups ({"admin", "list", "detail", "edit"})
      */
     private $email;
 
@@ -45,13 +45,13 @@ trait UserTrait
     /**
      * @var string The display name
      * @ORM\Column(type="string", length=40, unique=false, nullable=true)
-     * @Groups ({"admin", "detail", "list"})
+     * @Groups ({"admin", "detail", "list", "edit"})
      */
     private $name;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Project", mappedBy="user", fetch="EAGER")
-     * @Groups ({"admin", "detail", "list"})
+     * @Groups ({"admin", "detail"})
      */
     private $projects;
 
