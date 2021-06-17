@@ -112,13 +112,16 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
     /**
      * @param Request $request
      * @param AuthenticationException $exception
-     * @return JsonResponse
+     * @return JsonResponse|RedirectResponse
      */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): JsonResponse|RedirectResponse
     {
-        return new JsonResponse([
-            'message' => $exception->getMessage()
-        ], Response::HTTP_UNAUTHORIZED);
+        if (strpos($request->headers->get('accept'),"application/json") !== false) {
+            return new JsonResponse([
+                'message' => $exception->getMessage()
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+        return new RedirectResponse("/redirect?to=/login&message=your session has expired.");
     }
 
     /**
