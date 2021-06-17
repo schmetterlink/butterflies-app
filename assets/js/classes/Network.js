@@ -36,7 +36,12 @@ class Network {
         axios[method.toLowerCase()](
             uri,
             data,
-            {headers: {'Authorization': `Bearer ${this.token}`}}
+            {headers:
+                    {
+                        'Authorization': `Bearer ${this.token}`,
+                        'accept': `application/json`
+                    }
+            }
         ).then(result => {
             if (callback === null) {
                 console.debug(result);
