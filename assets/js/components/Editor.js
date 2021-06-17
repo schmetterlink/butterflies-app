@@ -12,7 +12,7 @@ import Button from "@material-ui/core/Button";
 import Network from "../classes/Network";
 
 function getModalStyle() {
-    const top = 25;
+    const top = 60;
     const left = 40;
 
     return {
@@ -106,9 +106,9 @@ class EditorNaked extends React.Component {
     }
     submitData(event) {
         event.preventDefault();
-        console.debug("submitting data fields");
+        console.debug("submitting data fields for "+this.state.entity+" #"+this.state.ideal);
         if (this.props.submitCallback) {
-            this.props.submitCallback(this.state.data, this.props.entity, event);
+            this.props.submitCallback(this.state.data, this.state.entity, this.state.id, event);
         }
 
     }
@@ -126,9 +126,9 @@ class EditorNaked extends React.Component {
         return (
             this.state.open ? (
                     <div style={getModalStyle()} className={classes.paper} key={"editor-"+this.childkey}>
-                        <form id={"edit-"+this.props.entity+"-"+this.state.data.id} method="PUT" onSubmit={this.submitData.bind(this)}>
+                        <form id={"edit-"+this.state.entity+"-"+this.state.data.id} method="PUT" onSubmit={this.submitData.bind(this)}>
                         <Table>
-                            <TableHead><TableRow><TableCell>Editor</TableCell></TableRow></TableHead>
+                            <TableHead><TableRow><TableCell>Editor {this.state.entity} #{this.state.id}</TableCell></TableRow></TableHead>
                             <TableBody>
                                     {this.getFields()}
                             </TableBody>
