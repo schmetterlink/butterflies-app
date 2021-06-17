@@ -55,6 +55,14 @@ class Dashboard extends Component {
     }
     editProfile() {
         console.debug("edit user profile");
+        this.editorRef.current.setEntity("user",this.state.userData.id, ["id","projects","createdAt"]);
+        if (this.editorRef.current.state.data === this.state.userData) {
+            this.editorRef.current.toggle();
+        } else {
+            this.editorRef.current.handleOpen();
+            this.editorRef.current.setData(this.state.userData);
+        }
+
     }
     editProject(data, action, event) {
         var that = this;
@@ -78,8 +86,8 @@ class Dashboard extends Component {
         }
         console.debug(action + " project #"+data.id);
     }
-    submitChanges(data, entity, event) {
-        console.debug("submitting changes for entity "+entity+"...");
+    submitChanges(data, entity, id, event) {
+        console.debug("submitting changes for entity "+entity+" #"+id+"...");
         console.debug(data);
         let that = this;
         let callback = function (data) {
@@ -92,7 +100,7 @@ class Dashboard extends Component {
             that.setState({status: error.response.status});
             console.error(error.response);
         }
-        this.network.callApi(entity+"/"+data.id, data, "PUT", callback, errorCallback);
+        this.network.callApi(entity+"/"+id, data, "PUT", callback, errorCallback);
     }
     filter (obj, keys) {
         let result = {}, key;
