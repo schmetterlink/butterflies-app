@@ -20,7 +20,7 @@ final class Version20210617145517 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE file ADD project_id INT UNSIGNED NOT NULL AFTER `user_id`');
+        $this->addSql('ALTER TABLE file ADD project_id INT UNSIGNED NULL AFTER `user_id`');
     }
 
     public function down(Schema $schema): void
