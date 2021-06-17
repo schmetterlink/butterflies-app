@@ -71,4 +71,5 @@ trait TimestampTrait
 
         return $this;
     }
+
 }

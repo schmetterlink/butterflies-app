@@ -22,7 +22,7 @@ trait ProjectTrait
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true})
      * @Serializer\Groups ({"admin", "detail", "list"})
      */
     private $id;

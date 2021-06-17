@@ -18,7 +18,7 @@ trait UserTrait
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true})
      * @Groups ({"admin", "list", "detail"})
      *
      */

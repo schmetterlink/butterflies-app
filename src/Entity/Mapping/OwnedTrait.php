@@ -6,7 +6,7 @@ use App\Entity\User;
 trait OwnedTrait
 {
     /**
-     * @ORM\Column(name="user_id", type="integer")
+     * @ORM\Column(name="user_id", type="integer", options={"unsigned"=true})
      */
     private $userId;
 

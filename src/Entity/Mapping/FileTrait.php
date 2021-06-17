@@ -20,7 +20,7 @@ trait FileTrait
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true})
      * @Serializer\Groups ({"admin", "detail", "list"})
      */
     private $id;
@@ -32,7 +32,7 @@ trait FileTrait
     private $user;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="project_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     private $projectId;
 
