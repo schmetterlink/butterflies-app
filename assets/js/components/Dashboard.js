@@ -44,14 +44,16 @@ class Dashboard extends Component {
         }
         this.network.callApi("me", undefined,"POST", callback);
     }
-    createProject() {
-        console.debug("creating project");
+    createEntity(entity, data = {title: 'title', description: 'lorem ipsum'}, event) {
+        console.debug("creating "+entity);
+        console.debug(data);
         var that = this;
-        let callback = function(data) {
-            console.debug("created a new project");
+        let callback = function(newEntity) {
+            console.debug("created a new "+entity+":");
+            console.debug(newEntity);
             that.getUserData();
         }
-        this.network.callApi("project", {title: 'TestTestTest', description: 'lorem ipsissimum'}, "POST", callback);
+        this.network.callApi(entity, data, "POST", callback);
     }
     editProfile() {
         console.debug("edit user profile");
@@ -64,17 +66,19 @@ class Dashboard extends Component {
         }
 
     }
-    editProject(data, action, event) {
+    editEntity(data, action, event) {
+        console.debug("editEntity callback triggered");
+        console.debug(action);
         var that = this;
         let callback = function(data) {
-            console.debug("project has been "+action+"d.");
+            console.debug("project has been "+action.name+"d.");
             that.getUserData();
         }
-        if (action === "delete") {
-            this.network.callApi("project/"+data.id, undefined, "DELETE", callback);
+        if (action.name === "delete") {
+            this.network.callApi(action.entity+"/"+data.id, undefined, "DELETE", callback);
         }
-        if (action === "edit") {
-            this.editorRef.current.setEntity("project",data.id, ["id", "createdAt"]);
+        if (action.name === "edit") {
+            this.editorRef.current.setEntity(action.entity,data.id, ["id", "createdAt"]);
             if (this.editorRef.current.state.data === data) {
                 this.editorRef.current.toggle();
             } else {
@@ -84,9 +88,9 @@ class Dashboard extends Component {
             //data.description += " edited";
             //this.network.callApi("project/"+data.id, data, "PUT", callback);
         }
-        console.debug(action + " project #"+data.id);
+        console.debug(action.name + " "+ action.entity +" #"+data.id);
     }
-    submitChanges(data, entity, id, event) {
+    submitChanges(data, entity, id) {
         console.debug("submitting changes for entity "+entity+" #"+id+"...");
         console.debug(data);
         let that = this;
@@ -116,7 +120,7 @@ class Dashboard extends Component {
         if(!this.state.user || this.state.status === 401) {
             window.location.href="/redirect?to=/login&message=your session has expired.";
         }
-        let callbacks = this.editProject.bind(this);
+        let callbacks = this.editEntity.bind(this);
         this.title = "Welcome "+this.state.user.name;
         const loading = this.state.loading;
 
@@ -126,7 +130,7 @@ class Dashboard extends Component {
             <Paper>
                 <Table>
                     <TableHead>
-                        <TableRow key={"heading-"+this.title}>
+                        <TableRow key={"heading-dashboard"}>
                             <TableCell>
                                 <h1>{this.title}</h1>
                                 <h4>This is your <strong>hirefly</strong> dashboard</h4>
@@ -134,22 +138,53 @@ class Dashboard extends Component {
                         </TableRow>
                     </TableHead>
                 </Table>
-                <div>
-                    { new NestedList().renderData("user", user) }
-                </div>
-                <Button variant="contained" color="primary" onClick={this.editProfile.bind(this)}>edit Profile</Button>
                 {loading || this.state.userData === undefined ? (
                     <div className={'row text-center'}>
                         <span className="fa fa-spin fa-spinner fa-4x"></span>
                     </div>
                 ) : (
                     <div>
-                        { new NestedList(callbacks,{edit:"primary",delete:"secondary"}).renderData("data", {projects: this.state.userData.projects}, "alternateRows") }
+                        { new NestedList().renderData("user", user) }
+                    <Button variant="contained" color="primary" onClick={this.editProfile.bind(this)}>edit Profile</Button>
+                        { new NestedList(
+                            [
+                                {name: "edit", class: "primary", callback: this.editEntity.bind(this), entity: "project"},
+                                {name: "delete", class: "secondary", callback: this.editEntity.bind(this), entity: "project"}
+                            ]
+                            )
+                            .renderData(
+                                "data",
+                                {projects: this.state.userData.projects},
+                                "alternateRows"
+                            )
+                        }
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={this.createEntity.bind(this,"project",{title: "Test-Project", description: "Description"})}
+                        >
+                            create Project
+                        </Button>
+                        { new NestedList(
+                            [
+                                {name: "edit", class: "primary", callback: this.editEntity.bind(this), entity: "file"},
+                                {name: "delete", class: "secondary", callback: this.editEntity.bind(this), entity: "file"}
+                            ])
+                            .renderData(
+                                "data",
+                                {files: this.state.userData.files},
+                                "alternateRows"
+                            )
+                        }
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={this.createEntity.bind(this,"file",{uri: "media/file/blub.jpg", title: "media file", description: "media file description"})}
+                        >
+                            create File
+                        </Button>
                     </div>
                 )}
-                <div>
-                <Button variant="contained" color="primary" onClick={this.createProject.bind(this)}>create Project</Button>
-                </div>
                 <Editor ref={this.editorRef} submitCallback={this.submitChanges.bind(this)}/>
             </Paper>
         )
