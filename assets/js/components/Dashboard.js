@@ -114,7 +114,7 @@ class Dashboard extends Component {
     }
     render() {
         if(!this.state.user || this.state.status === 401) {
-            return <Redirect to={"/redirect?to=/login"} />
+            window.location.href="/redirect?to=/login&message=your session has expired.";
         }
         let callbacks = this.editProject.bind(this);
         this.title = "Welcome "+this.state.user.name;
