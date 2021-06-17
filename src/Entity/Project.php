@@ -18,6 +18,16 @@ class Project
 {
     use ProjectTrait, OwnedTrait, TimestampTrait;
 
+    /**
+     * Project constructor.
+     */
+    public function __construct(User $user, $title = '', $description = '')
+    {
+        $this->user = $user;
+        $this->setTitle($title);
+        $this->setDescription($description);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,13 +89,5 @@ class Project
         return $this;
     }
 
-    /**
-     * Project constructor.
-     */
-    public function __construct(User $user, $title = '', $description = '')
-    {
-        $this->user = $user;
-        $this->setTitle($title);
-        $this->setDescription($description);
-    }
+
 }

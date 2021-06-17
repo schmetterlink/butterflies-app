@@ -28,25 +28,9 @@ trait ProjectTrait
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $userId;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="projects")
      */
     private $user;
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-        return $this;
-    }
 
     /**
      * @ORM\Column(type="string", length=60)

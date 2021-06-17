@@ -1,14 +1,12 @@
 <?php
-
-
 namespace App\Entity\Mapping;
 
+use App\Entity\User;
 
 trait OwnedTrait
 {
-
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="user_id", type="integer")
      */
     private $userId;
 
@@ -21,6 +19,17 @@ trait OwnedTrait
     {
         $this->userId = $userId;
 
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
         return $this;
     }
 }

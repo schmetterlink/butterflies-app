@@ -113,6 +113,16 @@ class User implements UserInterface
     }
 
     /**
+     * @Serializer\SerializedName("files")
+     * @Serializer\Groups({"admin", "list", "detail"})
+     *
+     * @return Collection
+     */
+    public function getFiles() {
+        return $this->files;
+    }
+
+    /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
      *

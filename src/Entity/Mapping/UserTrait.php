@@ -4,6 +4,7 @@
 namespace App\Entity\Mapping;
 
 
+use App\Entity\File;
 use App\Entity\Project;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -64,6 +65,7 @@ trait UserTrait
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     /**
@@ -74,5 +76,12 @@ trait UserTrait
         return $this->projects;
     }
 
+    /**
+     * @return Collection|File[]
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
 
 }

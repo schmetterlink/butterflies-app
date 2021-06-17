@@ -12,14 +12,28 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity (repositoryClass=FileRepository::class)
  */
-#[ApiResource]
 class File
 {
     use FileTrait, OwnedTrait, TimestampTrait;
 
+    /**
+     * Project constructor.
+     */
+    public function __construct(User $user, $title = '', $description = '')
+    {
+        $this->user = $user;
+        $this->setTitle($title);
+        $this->setDescription($description);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
     }
 
     public function getProjectId(): ?int
