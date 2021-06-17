@@ -40,7 +40,7 @@ class Dashboard extends Component {
             console.debug(data);
             let userData = JSON.parse(data);
             console.debug("successfully retrieved user data with ["+userData.projects.length+"] projects");
-            that.setState({ status: data.status, success: true, loading: false, userData: userData});
+            that.setState({ user: userData, status: data.status, success: true, loading: false, userData: userData});
         }
         this.network.callApi("me", undefined,"POST", callback);
     }
