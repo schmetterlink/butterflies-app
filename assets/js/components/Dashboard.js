@@ -112,8 +112,10 @@ class Dashboard extends Component {
                         </TableRow>
                     </TableHead>
                 </Table>
-                <div>{ new NestedList().renderData("data", this.state.user) }
+                <div>
+                    { new NestedList().renderData("data", this.state.user) }
                 </div>
+                <Button variant="contained" color="primary" onClick={this.editProfile.bind(this)}>edit Profile</Button>
                 {loading || this.state.userData === undefined ? (
                     <div className={'row text-center'}>
                         <span className="fa fa-spin fa-spinner fa-4x"></span>
@@ -125,7 +127,6 @@ class Dashboard extends Component {
                 )}
                 <div>
                 <Button variant="contained" color="primary" onClick={this.createProject.bind(this)}>create Project</Button>
-                <Button variant="contained" color="primary" onClick={this.editProfile.bind(this)}>edit Profile</Button>
                 </div>
                 <Editor ref={this.editorRef} entity={"project"} submitCallback={this.submitChanges.bind(this)}/>
             </Paper>
