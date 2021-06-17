@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
-use Symfony\Component\Security\Guard\Token\GuardTokenInterface;
-use Symfony\Component\VarDumper\VarDumper;
 
 class DefaultController extends AbstractController
 {
@@ -27,10 +25,11 @@ class DefaultController extends AbstractController
             return $this->redirect('/login');
         }
         $user = $tokenStorage->getToken();
-        return $this->render('default/dashboard.html.twig', [
+        $data = [
             'user' => $user->getUser(),
             'token' => $authenticator->getCredentials($request)
-        ]);
+        ];
+        return $this->render('default/dashboard.html.twig', $data);
     }
     /**
      * @Route("/logout", name="logout", defaults={"reactRouting": null})
@@ -40,6 +39,18 @@ class DefaultController extends AbstractController
         $tokenStorage->setToken();
         $session->clear();
         return $this->redirect('/login');
+    }
+    /**
+     * @Route("/redirect", name="redirect", defaults={"reactRouting": null})
+     */
+    public function redirectTo(Request $request)
+    {
+        return $this->render(
+            'default/redirect.html.twig',
+            [
+                "targetUri" => $request->get('to', '/login'),
+                "message" => $request->get('message')
+            ]);
     }
     /**
      * @Route("/{reactRouting}", name="home", defaults={"reactRouting": null})

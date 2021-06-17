@@ -95,7 +95,7 @@ class Dashboard extends Component {
     }
     render() {
         if(!this.state.user || this.state.status === 401) {
-            return <Redirect to={"/login"} />
+            return <Redirect to={"/redirect?to=/login"} />
         }
         let callbacks = this.editProject.bind(this);
         this.title = "Welcome "+this.state.user.name;

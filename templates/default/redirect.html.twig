@@ -1,0 +1,17 @@
+{# ./templates/default/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}hirefly.de{% endblock %}
+
+{% block scripts %}
+    window.setTimeout(function(){
+        window.location.href = "{{ targetUri }}";
+    }, 3000);
+{% endblock %}
+
+{% block body %}
+     <div>
+         {{ message }} please be patient. you will be redirected to <a href="/{{ targetUri }}">{{ targetUri }}</a>
+     </div>
+{% endblock %}
