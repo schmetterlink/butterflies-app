@@ -20,7 +20,7 @@ final class Version20210602113349 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE project ADD CONSTRAINT project_user_id_fk FOREIGN KEY (user_id) REFERENCES user (id);');
+       $this->addSql('ALTER TABLE project ADD CONSTRAINT project_user_id_fk FOREIGN KEY (user_id) REFERENCES user (id);');
     }
 
     public function down(Schema $schema): void
