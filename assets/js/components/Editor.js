@@ -40,8 +40,10 @@ class EditorNaked extends React.Component {
         this.childkey = 0;
         this.state = {
             open: false,
-            data: undefined
-        };
+            data: undefined,
+            originalData: {}
+        }
+        ;
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
     }
@@ -51,24 +53,29 @@ class EditorNaked extends React.Component {
         this.state.protectedFields = protectedFields;
     }
 
-    handleOpen() {
+    handleOpen(e) {
+        this.resetData(e);
         this.setState({open: true});
     };
 
-    handleClose() {
-        this.setState({open: false});
+    handleClose(e) {
+        this.resetData(e);
+        this.setState({open: false, data: {}, originalData: {}});
     };
     handleChange(e) {
+        if (this.state.originalData[e.target.name] === undefined) {
+            this.state.originalData[e.target.name] = this.state.data[e.target.name];
+        }
         this.state.data[e.target.name] = e.target.value;
     }
 
-    toggle() {
-        this.setState({open: !this.state.open});
+    toggle(e) {
+        this.state.open ? this.handleClose(e) : this.handleOpen(e);
     }
 
     setData(data) {
         console.debug(data);
-        this.setState({data: data});
+        this.setState({originalData: {}, data: data});
     }
     getFields(data = undefined) {
         if (data === undefined) {
@@ -107,7 +114,10 @@ class EditorNaked extends React.Component {
     }
     resetData(event) {
         console.debug("resetting data fields");
-
+        for (let key in this.state.originalData) {
+            this.state.data[key] = this.state.originalData[key];
+        }
+        this.setState({data: this.state.data, originalData: {}});
     }
 
     render() {
