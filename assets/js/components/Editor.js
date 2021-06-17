@@ -45,7 +45,11 @@ class EditorNaked extends React.Component {
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
     }
-
+    setEntity(entity = undefined, id = undefined, protectedFields = ["id", "createdAt", "updatedAt"]) {
+        this.state.entity = entity;
+        this.state.id = id;
+        this.state.protectedFields = protectedFields;
+    }
 
     handleOpen() {
         this.setState({open: true});
@@ -71,15 +75,23 @@ class EditorNaked extends React.Component {
             data = this.state.data;
         }
         let tableRows = [];
-        console.debug("creating input fields for data");
+        console.debug("creating input fields for data.");
+        if (this.state.protectedFields.length) console.debug("protected fields: "+this.state.protectedFields.toString());
         console.debug(data);
         for (let row in data) {
             let cname = "field-row-" + row;
+            let readOnly = this.state.protectedFields.includes(row);
             tableRows.push(
                 <TableRow key={cname}>
                     <TableCell>{row}</TableCell>
                     <TableCell>
-                        <input name={row} type={"text"} defaultValue={data[row]} onChange={this.handleChange.bind(this)} />
+                        <input
+                            name={row}
+                            readOnly={readOnly}
+                            type={"text"}
+                            defaultValue={data[row]}
+                            onChange={this.handleChange.bind(this)}
+                        />
                     </TableCell>
                 </TableRow>);
         }
