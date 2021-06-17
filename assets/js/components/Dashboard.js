@@ -93,6 +93,16 @@ class Dashboard extends Component {
         }
         this.network.callApi(entity+"/"+data.id, data, "PUT", callback, errorCallback);
     }
+    filter (obj, keys) {
+        let result = {}, key;
+        for (let i in keys) {
+            key = keys[i];
+            if (obj.hasOwnProperty(key)) {
+                result[key] = obj[key];
+            }
+        }
+        return result;
+    }
     render() {
         if(!this.state.user || this.state.status === 401) {
             return <Redirect to={"/redirect?to=/login"} />
@@ -100,6 +110,9 @@ class Dashboard extends Component {
         let callbacks = this.editProject.bind(this);
         this.title = "Welcome "+this.state.user.name;
         const loading = this.state.loading;
+
+        let user = this.filter(this.state.user, ["id","name","email"]);
+
         return(
             <Paper>
                 <Table>
@@ -113,7 +126,7 @@ class Dashboard extends Component {
                     </TableHead>
                 </Table>
                 <div>
-                    { new NestedList().renderData("data", this.state.user) }
+                    { new NestedList().renderData("user", user) }
                 </div>
                 <Button variant="contained" color="primary" onClick={this.editProfile.bind(this)}>edit Profile</Button>
                 {loading || this.state.userData === undefined ? (
