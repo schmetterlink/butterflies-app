@@ -46,8 +46,12 @@ class Login extends Component {
                 this.submitLogin(e);
             } else {
                 console.warn("registration rejected.");
+                console.error(result);
             }
-        })
+        }).catch(error => {
+            console.warn("registration rejected.");
+            console.error(error.response);
+        });
     }
 
     handleChange(e) {
