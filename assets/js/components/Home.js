@@ -5,6 +5,7 @@ import Posts from './Posts';
 import Dashboard from "./Dashboard";
 import Login from './Login';
 import Logout from './Logout';
+import Signup from './Signup';
 
 class Home extends Component {
     constructor() {
@@ -17,7 +18,9 @@ class Home extends Component {
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
 
-                    <Link className={"navbar-brand"} to={"/"}><img src={'/build/images/ci/hirefly-final-magenta-black-matte-animated.gif'} alt='hirefly.de' /></Link>
+                    <Link className={"navbar-brand"} to={"/"}><img
+                        src={'/build/images/ci/hirefly-final-magenta-black-matte-animated.gif'}
+                        alt='hirefly.de'/></Link>
                     <div className="collapse navbar-collapse" id="navbarText">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item">
@@ -34,7 +37,10 @@ class Home extends Component {
                             <li className="nav-item">
                             {this.state.user === null
                                 ?
-                                <Link className={"nav-link"} to={"/login"}> SignIn </Link>
+                                <div>
+                                    <Link className={"nav-link"} to={"/login"}> Login </Link>
+                                    <Link className={"nav-link"} to={"/signup"}> Subscribe </Link>
+                                </div>
                                 : <Link className={"nav-link"} to={"/logout"}> Logout </Link>
                             }
                             </li>
@@ -47,7 +53,8 @@ class Home extends Component {
                     <Route path="/posts" component={Posts} />
                     <Route path="/dashboard" component={Dashboard} />
                     <Route path="/login" component={Login} />
-                    <Route path="/logout" component={Logout} />
+                    <Route path="/logout" component={Logout}/>
+                    <Route path="/signup" component={Signup}/>
                 </Switch>
             </div>
         )

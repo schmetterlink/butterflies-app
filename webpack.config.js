@@ -70,10 +70,11 @@ Encore
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
+    .addEntry('babel-regenerator-runtime', './assets/js/app.js')
 ;
 
 
-module.exports = Encore.getWebpackConfig();
-//const config = Encore.getWebpackConfig();
+//module.exports = Encore.getWebpackConfig();
+const config = Encore.getWebpackConfig();
 //config.optimization.splitChunks.minSize = 20000;
-//module.exports = config;
+module.exports = [config];
