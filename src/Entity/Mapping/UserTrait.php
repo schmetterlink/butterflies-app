@@ -12,6 +12,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 trait UserTrait
 {
@@ -27,6 +29,10 @@ trait UserTrait
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups ({"admin", "list", "detail", "edit"})
+     *
+     * @Assert\NotBlank(message = "must not be blank")
+     * @Assert\Length(min=3, max=180, minMessage = "too short", maxMessage = "too long")
+     * @Assert\Email(message = "not a valid email")
      */
     private $email;
 
@@ -40,6 +46,9 @@ trait UserTrait
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Groups ({"admin"})
+     *
+     * @Assert\NotBlank(message = "must not be blank")
+     * @Assert\Length(min=6, max=180, minMessage = "too short", maxMessage = "too long")
      */
     private $password;
 
