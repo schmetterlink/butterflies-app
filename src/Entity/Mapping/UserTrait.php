@@ -50,6 +50,13 @@ trait UserTrait
      */
     private $name;
 
+
+    /**
+     * @ORM\Column(name="image_url", type="string", length=250, nullable=true, options={"comment":"uploaded_file"})
+     * @Groups ({"admin", "detail", "list", "edit"})
+     */
+    private $imageUrl;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Project", mappedBy="user", fetch="EAGER")
      * @Groups ({"admin", "detail"})

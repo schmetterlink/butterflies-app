@@ -102,6 +102,18 @@ class User implements UserInterface
     }
 
 
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(?string $imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
     /**
      * @Serializer\SerializedName("projects")
      * @Serializer\Groups({"admin", "list", "detail"})
