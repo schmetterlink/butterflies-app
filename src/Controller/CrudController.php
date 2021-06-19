@@ -8,6 +8,7 @@ use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Entity\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Validator\Constraints\Json;
+use Symfony\Component\Validator\Mapping\MetadataInterface;
+use Symfony\Component\Validator\Mapping\PropertyMetadata;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\VarDumper\VarDumper;
 
 class CrudController extends AbstractController
@@ -40,6 +44,7 @@ class CrudController extends AbstractController
             $methodName = "set".ucfirst($key);
             $entity->$methodName($value);
         }
+
         if (method_exists($entity, "setUserId")) {
             $entity->setUserId($user->getId());
         }
@@ -49,6 +54,37 @@ class CrudController extends AbstractController
         $manager->flush();
         return new JsonResponse($entity);
     }
+
+    /**
+     * @Route("/api/meta/{entityName}/{fieldName}", name="api_crud_get_meta", methods={"GET"}, defaults={"fieldName"=""})
+     */
+    public function getMetaData(string $entityName, string $fieldName, EntityManagerInterface $em, ValidatorInterface $validator):JsonResponse {
+        $entityClassName = $this->getEntityClassName($entityName);
+
+        /** @var ClassMetadata $meta */
+        $meta = $em->getClassMetadata($entityClassName);
+
+        $mappings = $meta->fieldMappings;
+
+        /** @var MetadataInterface $constraints */
+        $constraints = $validator->getMetadataFor($entityClassName);
+        /**
+         * @var  $field
+         * @var PropertyMetadata $propertyMeta
+         */
+
+        foreach ($constraints->members as $field => $propertyMetaList) {
+            foreach ($propertyMetaList as $propertyMeta) {
+                foreach($propertyMeta->constraints as $constraint) {
+
+                    $mappings[$field]['constraints'][$constraint::class] = $constraint;
+                }
+            }
+        }
+
+        return new JsonResponse($fieldName ? $mappings[$fieldName] : $mappings, 200);
+    }
+
     /**
      * @Route("/api/{entityName}/{id}", name="api_crud_update", methods={"PUT"})
      */
