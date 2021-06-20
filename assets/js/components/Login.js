@@ -77,7 +77,9 @@ class Login extends Component {
                     </div>
                 </div>
                 <div className="box">
-
+                    <div className={'row text-center'}>
+                        <span className="fa fa-spin fa-spinner fa-4x"></span>
+                    </div>
                     <div className="input-group">
                         <label htmlFor="username">Email</label>
                         <input
