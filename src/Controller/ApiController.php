@@ -63,12 +63,11 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/me", name="api_me")
      */
-    public function me(Request $request, TokenStorageInterface $tokenStorage): JsonResponse
+    public function me(Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $em): JsonResponse
     {
         //$user = $this->serializer->normalize($this->user, null, ['groups' => 'list']);
-
         //$user = $this->serializer->normalize($user, null, $defaultContext);
-        $userData = $this->serializer->serialize($this->user, 'json', ['groups' => 'list']);
+        $userData = $this->serializer->serialize($this->user, 'json', ['groups' => ['list']]);
         $response = new JsonResponse($userData);
         return $response;
     }

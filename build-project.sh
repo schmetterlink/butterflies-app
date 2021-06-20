@@ -14,7 +14,7 @@ yarn install
 
 yarn add --dev react react-dom prop-types axios jquery popper.js font-awesome sass-loader@^7.0.1 @babel/preset-react dropzone sortablejs @babel/plugin-transform-runtime
 yarn add bootstrap @babel/core@^7.0 core-js@2 babel-loader @babel/preset-env @babel/plugin-proposal-class-properties @babel/plugin-transform-runtime @babel/plugin-syntax-dynamic-import react-router-dom @material-ui/core @babel/runtime
-yarn add formik yup @emotion/styled @emotion/react babel-polyfill
+yarn add formik yup @emotion/styled @emotion/react babel-polyfill react-bootstrap
 
 ## sass is supposed to deliver better results than node-sass
 yarn add node-sass@^4.1.1 --devs

@@ -10,9 +10,20 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
 import '../css/app.css';
-import Home from './components/Home';
+import '../css/forms.css';
+import '../css/colors.css';
+import BootstrapNavbar from './components/BootstrapNavbar';
+/*
+import { createMuiTheme } from '@material-ui/styles';
 
 
-ReactDOM.render(<Router><Home /></Router>, document.getElementById('root'));
+const theme = createMuiTheme({
+    palette: {
+        primary: '#00bcd4',
+        secondary: '#ff4081'
+    }
+});
+*/
+ReactDOM.render(<Router><BootstrapNavbar/></Router>, document.getElementById('root'));

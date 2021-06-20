@@ -128,16 +128,21 @@ class EditorNaked extends React.Component {
         return (
             this.state.open ? (
                     <div style={getModalStyle()} className={classes.paper} key={"editor-"+this.childkey}>
-                        <form id={"edit-"+this.state.entity+"-"+this.state.data.id} method="PUT" onSubmit={this.submitData.bind(this)}>
-                        <Table>
-                            <TableHead><TableRow><TableCell>Editor {this.state.entity} #{this.state.id}</TableCell></TableRow></TableHead>
-                            <TableBody>
+                        <form id={"edit-" + this.state.entity + "-" + this.state.data.id} method="PUT"
+                              onSubmit={this.submitData.bind(this)}>
+                            <Table>
+                                <TableHead><TableRow><TableCell>Editor {this.state.entity} #{this.state.id}</TableCell></TableRow></TableHead>
+                                <TableBody>
                                     {this.getFields()}
-                            </TableBody>
-                        </Table>
-                            <Button type="submit" variant="contained" color="primary">save</Button>
-                            <Button variant="contained" color="primary" onClick={this.resetData.bind(this)}>reset</Button>
-                            <Button variant="contained" color="secondary" onClick={this.handleClose.bind(this)}>X</Button>
+                                </TableBody>
+                            </Table>
+                            <div>
+                                <Button type="submit" variant="contained" color="primary">save</Button>
+                                <Button variant="contained" color="primary"
+                                        onClick={this.resetData.bind(this)}>reset</Button>
+                                <Button variant="contained" color="secondary"
+                                        onClick={this.handleClose.bind(this)}>X</Button>
+                            </div>
                         </form>
                         <div>{/* new NestedList().renderData("data", this.state.data) */}
                         </div>

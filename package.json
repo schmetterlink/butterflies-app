@@ -43,6 +43,7 @@
         "encore": "^0.0.30-beta",
         "formik": "^2.2.9",
         "react": "^17.0.2",
+        "react-bootstrap": "^1.6.1",
         "react-router-dom": "^5.2.0",
         "webpack-notifier": "^1.6.0",
         "yup": "^0.32.9"
