@@ -1,6 +1,8 @@
 //Login Box
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
+import Button from "@material-ui/core/Button";
 
 class Login extends Component {
 
@@ -66,7 +68,13 @@ class Login extends Component {
         return (
             <div className="inner-container">
                 <div className="header">
-                    Login
+                    <h2>Login</h2>
+                    <div>
+                        Please enter your account credentials in order to log in to your hirefly account.
+                    </div>
+                    <div>
+                        You do not have an account yet? Please <Link to={"/signup"}>register</Link> here.
+                    </div>
                 </div>
                 <div className="box">
 
@@ -90,19 +98,23 @@ class Login extends Component {
                             placeholder="Password"/>
                     </div>
 
-                    <button
+                    <Button
                         type="button"
                         className="login-btn"
+                        variant="contained"
+                        color="primary"
                         onClick={this
                             .submitLogin
-                            .bind(this)}>Login</button>
+                            .bind(this)}>Login</Button>
 
-                    <button
+                    <Button
                         type="button"
                         className="register-btn"
+                        variant="contained"
+                        color="secondary"
                         onClick={this
                             .submitRegistration
-                            .bind(this)}>Register</button>
+                            .bind(this)}>Register</Button>
                 </div>
             </div>
         );

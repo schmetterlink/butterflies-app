@@ -3,8 +3,13 @@ import ReactDOM from "react-dom";
 import {Formik, Form, useField, useFormikContext} from "formik";
 import * as Yup from "yup";
 import styled from "@emotion/styled";
-import "../../css/styles.css";
-import "../../css/styles-custom.css";
+import {Link} from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import Network from "../classes/Network"
+import axios from "axios";
+
+//import "../../css/styles.css";
+//import "../../css/styles-custom.css";
 
 const MyTextInput = ({label, ...props}) => {
     // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -78,75 +83,109 @@ const MySelect = ({label, ...props}) => {
 const SignupForm = () => {
     return (
         <>
-            <h1>Subscribe!</h1>
-            <Formik
-                initialValues={{
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    acceptedTerms: false, // added for our checkbox
-                    jobType: "" // added for our select
-                }}
-                validationSchema={Yup.object({
-                    firstName: Yup.string()
-                        .max(15, "Must be 15 characters or less")
-                        .required("Required"),
-                    lastName: Yup.string()
-                        .max(20, "Must be 20 characters or less")
-                        .required("Required"),
-                    email: Yup.string()
-                        .email("Invalid email addresss`")
-                        .required("Required"),
-                    acceptedTerms: Yup.boolean()
-                        .required("Required")
-                        .oneOf([true], "You must accept the terms and conditions."),
-                    jobType: Yup.string()
-                        // specify the set of valid values for job type
-                        // @see http://bit.ly/yup-mixed-oneOf
-                        .oneOf(
-                            ["designer", "development", "product", "other"],
-                            "Invalid Job Type"
-                        )
-                        .required("Required")
-                })}
-                onSubmit={async (values, {setSubmitting}) => {
-                    await new Promise(r => setTimeout(r, 500));
-                    setSubmitting(false);
-                }}
-            >
-                <Form>
-                    <MyTextInput
-                        label="First Name"
-                        name="firstName"
-                        type="text"
-                        placeholder="Jane"
-                    />
-                    <MyTextInput
-                        label="Last Name"
-                        name="lastName"
-                        type="text"
-                        placeholder="Doe"
-                    />
-                    <MyTextInput
-                        label="Email Address"
-                        name="email"
-                        type="email"
-                        placeholder="jane@formik.com"
-                    />
-                    <MySelect label="Job Type" name="jobType">
-                        <option value="">Select a job type</option>
-                        <option value="designer">Designer</option>
-                        <option value="development">Developer</option>
-                        <option value="product">Product Manager</option>
-                        <option value="other">Other</option>
-                    </MySelect>
-                    <MyCheckbox name="acceptedTerms">
-                        I accept the terms and conditions
-                    </MyCheckbox>
+            <div className={"dataForm"}>
+                <h2>Sign up</h2>
+                <div>
+                    We need some personal information* in order to create your hirefly account.
+                </div>
+                <div>
+                    You already have an account? Please <Link to={"/login"}>login</Link> here.
+                </div>
+                <Formik
+                    initialValues={{
+                        name: "",
+                        email: "",
+                        password: "",
+                        acceptedTerms: false, // added for our checkbox
+                        jobType: "" // added for our select
+                    }}
+                    validationSchema={Yup.object({
+                        name: Yup.string()
+                            .max(20, "Must be 20 characters or less")
+                            .required("Required"),
+                        email: Yup.string()
+                            .email("Invalid email addresss`")
+                            .required("Required"),
+                        password: Yup.string()
+                            .min(6, "Must contain at least 6 characters")
+                            .max(60, "Must be 60 characters or less")
+                            .required("Required"),
+                        acceptedTerms: Yup.boolean()
+                            .required("Required")
+                            .oneOf([true], "You must accept the terms and conditions."),
+                        jobType: Yup.string()
+                            // specify the set of valid values for job type
+                            // @see http://bit.ly/yup-mixed-oneOf
+                            .oneOf(
+                                ["designer", "development", "product", "other"],
+                                "Invalid Job Type"
+                            )
+                            .required("Required")
+                    })}
+                    onSubmit={(values, {setSubmitting}) => {
+                        setTimeout(() => {
+                            let callback = function (response) {
+                                console.log("trying to log in with newly created credentials");
+                                console.log(values);
+                                axios.post(`/auth/login`, values).then(result => {
+                                    if (result.data.token) {
+                                        console.log("authentication request granted.");
+                                        window.location.href = 'dashboard?token=' + result.data.token.replace('Bearer ', '', 1);
+                                    } else {
+                                        console.warn("authentication request rejected.");
+                                    }
+                                })
+                                console.debug(response);
+                            }
+                            let errorCallback = function (error) {
+                                console.error(error.response);
+                            }
+                            new Network().callApi("/auth/register", values, "POST", callback, errorCallback);
+                            setSubmitting(false);
+                        }, 400);
+                    }}
+                >
+                    <Form>
+                        <MyTextInput
+                            label="Your Name"
+                            name="name"
+                            type="text"
+                            placeholder="Jane Doe"
+                        />
+                        <MyTextInput
+                            label="Email Address"
+                            name="email"
+                            type="email"
+                            placeholder="jane@hirefly.de"
+                        />
+                        <MyTextInput
+                            label="Password"
+                            name="password"
+                            type="password"
+                            placeholder="A secure password"
+                        />
+                        <MySelect label="Job Type" name="jobType">
+                            <option value="">Select a job type</option>
+                            <option value="designer">Designer</option>
+                            <option value="development">Developer</option>
+                            <option value="product">Product Manager</option>
+                            <option value="other">Other</option>
+                        </MySelect>
+                        <div>
+                            <MyCheckbox name="acceptedTerms">
+                                I accept the terms and conditions
+                            </MyCheckbox>
+                        </div>
 
-                    <button type="submit">Submit</button>
-                </Form>
-            </Formik>
+                        <Button variant="contained" color="secondary" type="submit">Sign up</Button>
+                    </Form>
+                </Formik>
+                <div>
+                    * No worries: Your personal information will be kept in a safe place and we will not use it for any
+                    purpose
+                    other than to maintain your account.
+                </div>
+            </div>
         </>
     );
 };
