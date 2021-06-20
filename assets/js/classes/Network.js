@@ -30,7 +30,7 @@ class Network {
     }
     callApi(target, data = undefined, method = "GET", callback = null, errorCallback = null) {
         this.state.loading = true;
-        let uri="/api/"+target;
+        let uri = target;
         console.debug("trigger "+method+" request to API ("+uri+") with token "+this.token);
         if (data !== undefined) console.debug(data);
         axios[method.toLowerCase()](

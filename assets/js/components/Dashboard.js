@@ -42,7 +42,7 @@ class Dashboard extends Component {
             console.debug("successfully retrieved user data with ["+userData.projects.length+"] projects");
             that.setState({ user: userData, status: data.status, success: true, loading: false, userData: userData});
         }
-        this.network.callApi("me", undefined,"POST", callback);
+        this.network.callApi("/api/me", undefined, "POST", callback);
     }
     createEntity(entity, data = {title: 'title', description: 'lorem ipsum'}, event) {
         console.debug("creating "+entity);
@@ -53,7 +53,7 @@ class Dashboard extends Component {
             console.debug(newEntity);
             that.getUserData();
         }
-        this.network.callApi(entity, data, "POST", callback);
+        this.network.callApi("/api/" + entity, data, "POST", callback);
     }
     editProfile() {
         console.debug("edit user profile");
@@ -75,7 +75,7 @@ class Dashboard extends Component {
             that.getUserData();
         }
         if (action.name === "delete") {
-            this.network.callApi(action.entity+"/"+data.id, undefined, "DELETE", callback);
+            this.network.callApi("/api/" + action.entity + "/" + data.id, undefined, "DELETE", callback);
         }
         if (action.name === "edit") {
             this.editorRef.current.setEntity(action.entity,data.id, ["id", "createdAt"]);
@@ -104,7 +104,7 @@ class Dashboard extends Component {
             that.setState({status: error.response.status});
             console.error(error.response);
         }
-        this.network.callApi(entity+"/"+id, data, "PUT", callback, errorCallback);
+        this.network.callApi("/api/" + entity + "/" + id, data, "PUT", callback, errorCallback);
     }
     filter (obj, keys) {
         let result = {}, key;
@@ -145,7 +145,8 @@ class Dashboard extends Component {
                 ) : (
                     <div>
                         { new NestedList().renderData("user", user) }
-                    <Button variant="contained" color="primary" onClick={this.editProfile.bind(this)}>edit Profile</Button>
+                        <Button variant="contained" color="primary" onClick={this.editProfile.bind(this)}>edit
+                            Profile</Button>
                         { new NestedList(
                             [
                                 {name: "edit", class: "primary", callback: this.editEntity.bind(this), entity: "project"},
