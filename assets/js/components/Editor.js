@@ -12,10 +12,12 @@ import Button from "@material-ui/core/Button";
 import Network from "../classes/Network";
 
 function getModalStyle() {
-    const top = 60;
+    const top = 30;
     const left = 40;
 
     return {
+        overflow: `auto`,
+        height: `80%`,
         position: `fixed`,
         top: `${top}%`,
         left: `${left}%`,
