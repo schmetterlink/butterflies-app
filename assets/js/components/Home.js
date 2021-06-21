@@ -23,18 +23,26 @@ class Home extends Component {
                         <ul className="navbar-nav mr-auto">
 
                             <li className="nav-item">
-                                <Link className={"nav-link"} to={"/dashboard"}> Dashboard </Link>
+
                             </li>
                             <li className="nav-item">
-                            {this.state.user === null
-                                ?
-                                <div>
-                                    <Link className={"nav-link"} to={"/login"}> Login </Link>
+                                {this.state.user === null
+                                    ?
                                     <Link className={"nav-link"} to={"/signup"}> Subscribe </Link>
-                                </div>
-                                : <Link className={"nav-link"} to={"/logout"}> Logout </Link>
-                            }
+                                    :
+                                    <Link className={"nav-link"} to={"/dashboard"}> Dashboard </Link>
+                                }
                             </li>
+                            <li className="nav-item">
+                                {this.state.user === null
+                                    ?
+                                    <span>
+                                        <Link className={"nav-link"} to={"/login"}> Login </Link>
+                                    </span>
+                                    : <Link className={"nav-link"} to={"/logout"}> Logout </Link>
+                                }
+                            </li>
+
                         </ul>
                     </div>
                 </nav>
