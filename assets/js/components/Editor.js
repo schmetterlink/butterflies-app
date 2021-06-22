@@ -43,6 +43,7 @@ class EditorNaked extends React.Component {
         this.state = {
             open: false,
             metaData: undefined,
+            files: {},
             data: undefined,
             originalData: {}
         }
@@ -69,6 +70,11 @@ class EditorNaked extends React.Component {
     handleChange(e) {
         if (this.state.originalData[e.target.name] === undefined) {
             this.state.originalData[e.target.name] = this.state.data[e.target.name];
+        }
+        if (event.target.files) {
+            console.debug("a file has been selected for upload to field '" + e.target.name + "':");
+            console.debug(event.target.files);
+            this.state.files[e.target.name] = event.target.files;
         }
         this.state.data[e.target.name] = e.target.value;
     }
@@ -118,6 +124,7 @@ class EditorNaked extends React.Component {
             />
 
             if (inputType === "file") {
+                console.log("file input " + row + " detected.");
                 inputField = <input
                     name={row}
                     readOnly={readOnly}
