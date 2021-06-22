@@ -18,8 +18,10 @@ class Dashboard extends Component {
     constructor() {
         super();
         this.state = {
+            metaData: undefined,
             user: window.REACT_SERVER_PROPS.user,
-            editMode: false
+            editMode: false,
+            token: window.REACT_SERVER_PROPS.token
         };
         this.editorRef = React.createRef();
         this.network = new Network(this, window.REACT_SERVER_PROPS.token);
@@ -36,13 +38,28 @@ class Dashboard extends Component {
     }
     getUserData() {
         var that = this;
-        let callback = function(data) {
-            console.debug(data);
-            let userData = JSON.parse(data);
-            console.debug("successfully retrieved user data with ["+userData.projects.length+"] projects");
-            that.setState({ user: userData, status: data.status, success: true, loading: false, userData: userData});
+        let metaCallback = function (metaData) {
+            console.debug("meta data retrieved");
+            console.debug(metaData);
+            if (metaData === undefined) {
+                console.error("MetaData could not be loaded!");
+            } else {
+                that.setState({metaData: metaData});
+            }
+            let callback = function (data) {
+                console.debug(data);
+                let userData = JSON.parse(data);
+                console.debug("successfully retrieved user data with [" + userData.projects.length + "] projects");
+                that.setState({user: userData, status: data.status, success: true, loading: false, userData: userData});
+                console.debug(that.state.metaData);
+            }
+            that.network.callApi("/api/me", undefined, "POST", callback);
         }
-        this.network.callApi("/api/me", undefined, "POST", callback);
+        /* TODO:
+            find out why a 302 redirect occurs if we do not send the authentication token explicitly with this GET request.
+            is it because the authentication headers are not sent with GET requests?
+        */
+        this.network.callApi("/api/meta/user,file,project?token=" + this.state.token, undefined, "GET", metaCallback);
     }
     createEntity(entity, data = {title: 'title', description: 'lorem ipsum'}, event) {
         console.debug("creating "+entity);
@@ -62,7 +79,7 @@ class Dashboard extends Component {
             this.editorRef.current.toggle();
         } else {
             this.editorRef.current.handleOpen();
-            this.editorRef.current.setData(this.state.userData);
+            this.editorRef.current.setData(this.state.userData, this.state.metaData["user"]);
         }
 
     }
@@ -83,7 +100,7 @@ class Dashboard extends Component {
                 this.editorRef.current.toggle();
             } else {
                 this.editorRef.current.handleOpen();
-                this.editorRef.current.setData(data);
+                this.editorRef.current.setData(data, this.state.metaData[action.entity]);
             }
             //data.description += " edited";
             //this.network.callApi("project/"+data.id, data, "PUT", callback);

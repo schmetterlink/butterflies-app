@@ -42,6 +42,7 @@ class EditorNaked extends React.Component {
         this.childkey = 0;
         this.state = {
             open: false,
+            metaData: undefined,
             data: undefined,
             originalData: {}
         }
@@ -64,6 +65,7 @@ class EditorNaked extends React.Component {
         this.resetData(e);
         this.setState({open: false, data: {}, originalData: {}});
     };
+
     handleChange(e) {
         if (this.state.originalData[e.target.name] === undefined) {
             this.state.originalData[e.target.name] = this.state.data[e.target.name];
@@ -75,32 +77,59 @@ class EditorNaked extends React.Component {
         this.state.open ? this.handleClose(e) : this.handleOpen(e);
     }
 
-    setData(data) {
-        console.debug(data);
+    setMetaData(metaData) {
+        this.setState({metaData: metaData});
+    }
+
+    getMetaDataFor(field) {
+        return this.state.metaData[field];
+    }
+
+    setData(data, metaData = undefined) {
+        console.debug({"data": data, "metaData": metaData});
+        if (metaData === undefined) {
+            console.warn("no meta data available for " + this.state.entity + " #" + this.state.id);
+        } else {
+            this.setMetaData(metaData);
+        }
         this.setState({originalData: {}, data: data});
     }
+
     getFields(data = undefined) {
         if (data === undefined) {
             data = this.state.data;
         }
         let tableRows = [];
         console.debug("creating input fields for data.");
-        if (this.state.protectedFields.length) console.debug("protected fields: "+this.state.protectedFields.toString());
+        if (this.state.protectedFields.length) console.debug("protected fields: " + this.state.protectedFields.toString());
         console.debug(data);
         for (let row in data) {
             let cname = "field-row-" + row;
             let readOnly = this.state.protectedFields.includes(row);
+            let fieldMeta = this.getMetaDataFor(row);
+            let inputType = fieldMeta?.options?.comment === "uploaded_file" ? "file" : "text";
+
+            let inputField = <input
+                name={row}
+                readOnly={readOnly}
+                type={inputType}
+                defaultValue={data[row]}
+                onChange={this.handleChange.bind(this)}
+            />
+
+            if (inputType === "file") {
+                inputField = <input
+                    name={row}
+                    readOnly={readOnly}
+                    type="file"
+                    onChange={this.handleChange.bind(this)}
+                />
+            }
             tableRows.push(
                 <TableRow key={cname}>
                     <TableCell>{row}</TableCell>
                     <TableCell>
-                        <input
-                            name={row}
-                            readOnly={readOnly}
-                            type={"text"}
-                            defaultValue={data[row]}
-                            onChange={this.handleChange.bind(this)}
-                        />
+                        {inputField}
                     </TableCell>
                 </TableRow>);
         }
@@ -130,9 +159,10 @@ class EditorNaked extends React.Component {
                     <div style={getModalStyle()} className={classes.paper} key={"editor-"+this.childkey}>
                         <form id={"edit-"+this.state.entity+"-"+this.state.data.id} method="PUT" onSubmit={this.submitData.bind(this)}>
                         <Table>
-                            <TableHead><TableRow><TableCell>Editor {this.state.entity} #{this.state.id}</TableCell></TableRow></TableHead>
+                            <TableHead><TableRow><TableCell
+                                colSpan={2}>Editor {this.state.entity} #{this.state.id}</TableCell></TableRow></TableHead>
                             <TableBody>
-                                    {this.getFields()}
+                                {this.getFields()}
                             </TableBody>
                         </Table>
                             <Button type="submit" variant="contained" color="primary">save</Button>

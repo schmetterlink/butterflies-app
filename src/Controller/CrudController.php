@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Entity\Repository\CategoryRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,33 +57,50 @@ class CrudController extends AbstractController
     }
 
     /**
-     * @Route("/api/meta/{entityName}/{fieldName}", name="api_crud_get_meta", methods={"GET"}, defaults={"fieldName"=""})
+     * @Route("/api/meta/{entityNames}/{fieldNames}", name="api_crud_get_meta", methods={"GET"}, defaults={"fieldNames"=""})
      */
-    public function getMetaData(string $entityName, string $fieldName, EntityManagerInterface $em, ValidatorInterface $validator):JsonResponse {
-        $entityClassName = $this->getEntityClassName($entityName);
+    public function getMetaData(string $entityNames, string $fieldNames, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
+    {
+        $entityNames = explode(",", $entityNames);
+        $fieldNames = array_filter(explode(",", $fieldNames));
 
-        /** @var ClassMetadata $meta */
-        $meta = $em->getClassMetadata($entityClassName);
+        $metaData = [];
 
-        $mappings = $meta->fieldMappings;
+        foreach ($entityNames as $entityName) {
+            $entityClassName = $this->getEntityClassName($entityName);
 
-        /** @var MetadataInterface $constraints */
-        $constraints = $validator->getMetadataFor($entityClassName);
-        /**
-         * @var  $field
-         * @var PropertyMetadata $propertyMeta
-         */
+            /** @var ClassMetadata $meta */
+            $meta = $em->getClassMetadata($entityClassName);
 
-        foreach ($constraints->members as $field => $propertyMetaList) {
-            foreach ($propertyMetaList as $propertyMeta) {
-                foreach($propertyMeta->constraints as $constraint) {
+            $mappings = $meta->fieldMappings;
 
-                    $mappings[$field]['constraints'][$constraint::class] = $constraint;
+            if (sizeOf($fieldNames) > 0) {
+                $mappings = array_intersect_key($mappings, array_flip($fieldNames));
+            }
+
+
+            $metaData[$entityName] = $mappings;
+
+            /** @var MetadataInterface $constraints */
+            $constraints = $validator->getMetadataFor($entityClassName);
+            /**
+             * @var  $field
+             * @var PropertyMetadata $propertyMeta
+             */
+
+            foreach ($constraints->members as $field => $propertyMetaList) {
+                if (sizeOf($fieldNames) === 0 || in_array($field, $fieldNames)) {
+                    foreach ($propertyMetaList as $propertyMeta) {
+                        foreach ($propertyMeta->constraints as $constraint) {
+                            $metaData[$entityName][$field]['constraints'][$constraint::class] = $constraint;
+                        }
+                    }
                 }
             }
         }
 
-        return new JsonResponse($fieldName ? $mappings[$fieldName] : $mappings, 200);
+
+        return new JsonResponse($metaData, 200);
     }
 
     /**
@@ -90,6 +108,7 @@ class CrudController extends AbstractController
      */
     public function update(string $entityName, string $id, Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $manager):JsonResponse
     {
+
         /** @var Entity\User $user */
         $user = $tokenStorage->getToken()->getUser();
 
@@ -109,13 +128,14 @@ class CrudController extends AbstractController
             return new JsonResponse(["error"=>"data manipulation error: primary keys may not be altered"], 400);
         }
 
+
         foreach ($values as $key=>$value) {
             $methodName = "set".ucfirst($key);
             try {
                 if (method_exists($entity, $methodName)) {
                     $entity->$methodName($value);
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
 
             }
         }
