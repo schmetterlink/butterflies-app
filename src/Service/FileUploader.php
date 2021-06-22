@@ -17,8 +17,8 @@ class FileUploader
     const WRITE_CONTENT = 1;
     const RETURN_CONTENT = 2;
 
-    private $rootPath;
     private $uploadPath;
+    private $publicPath;
     private $namingStrategy;
     private $slugger;
     private $logger;
@@ -28,10 +28,10 @@ class FileUploader
      * @param Parameter $targetDirectory
      * @param SluggerInterface $slugger
      */
-    public function __construct($rootPath, $uploadPath, $namingStrategy, SluggerInterface $slugger, LoggerInterface $logger)
+    public function __construct($uploadPath, $publicPath, $namingStrategy, SluggerInterface $slugger, LoggerInterface $logger)
     {
-        $this->rootPath = $rootPath;
         $this->uploadPath = $uploadPath;
+        $this->publicPath = $publicPath;
         $this->namingStrategy = $namingStrategy;
         $this->slugger = $slugger;
         $this->logger = $logger;
@@ -57,7 +57,7 @@ class FileUploader
      * @return array
      * @throws Exception
      */
-    public function digestFormContent(Request $request, $mode = self::RETURN_CONTENT, $uploadPath = null): array
+    public function digestFormContent(Request $request, $mode = self::RETURN_CONTENT, $targetPath = null, $cleanupPath = null): array
     {
         $contentTypes = explode("; ", $request->headers->get('content-type'));
         if (in_array("multipart/form-data", $contentTypes)) {
@@ -91,24 +91,45 @@ class FileUploader
                     //$publicPath = $this->getPath($this->getPublicDirectory(), $uploadPath ,$filename);
                     //$targetPath = $this->getPath($this->getTargetDirectory(), $uploadPath ,$filename);
                     $fileParams = pathinfo($filename);
-                    $fileParams['root'] = $this->rootPath;
-                    $fileParams['public'] = $this->uploadPath;
-                    $fileParams['path'] = $this->rootPath . $this->uploadPath;
-                    if ($uploadPath) {
-                        $uploadPath = $this->pathTemplate($uploadPath, $fileParams);
+                    $fileParams['path'] = $this->uploadPath;
+                    $fileParams['upload'] = $this->uploadPath;
+                    $fileParams['fieldname'] = $attributes['name'];
+
+                    if ($targetPath) {
+                        $uploadPath = $this->pathTemplate($targetPath, $fileParams);
                     } else {
                         $uploadPath = $this->pathTemplate($this->namingStrategy, $fileParams);
                     }
 
-                    $attributes['path'] = $uploadPath;
-                    $attributes['target'] = $this->rootPath . $uploadPath;
+                    $fileParams['path'] = $this->publicPath;
+                    $fileParams['public'] = $this->publicPath;
+
+                    if ($targetPath) {
+                        $publicPath = $this->pathTemplate($targetPath, $fileParams);
+                    } else {
+                        $publicPath = $this->pathTemplate($this->namingStrategy, $fileParams);
+                    }
+
+                    $attributes['public'] = $publicPath;
+                    $attributes['upload'] = $uploadPath;
+
                     if ($mode & self::WRITE_CONTENT) {
-                        $attributes['content'] = $uploadPath;
-                        $dir = pathinfo($this->rootPath . $uploadPath, PATHINFO_DIRNAME);
+                        $attributes['content'] = $publicPath;
+                        $dir = pathinfo($uploadPath, PATHINFO_DIRNAME);
                         if (!file_exists($dir)) {
                             mkdir($dir, 0755, true);
                         }
-                        file_put_contents($this->rootPath . $uploadPath, $content);
+                        if ($cleanupPath) {
+                            $cleanupPath = $this->pathTemplate($cleanupPath, $fileParams);
+                            $this->logger->info("performing cleanup ('" . $cleanupPath . "')");
+                            $glob = glob($cleanupPath);
+                            foreach ($glob as $row) {
+                                $this->logger->info("unlinking existing file {file}", ["file" => $row]);
+                                unlink($row);
+                            }
+                            // array_map("unlink", $glob);
+                        }
+                        file_put_contents($uploadPath, $content);
                     }
 
                     if ($mode & self::RETURN_CONTENT) {
@@ -135,7 +156,7 @@ class FileUploader
 
     public function getTargetDirectory(): string
     {
-        return $this->rootPath . $this->uploadPath;
+        return $this->uploadPath;
     }
 
     public function getPublicDirectory(): string

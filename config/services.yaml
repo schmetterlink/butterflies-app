@@ -5,7 +5,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     jwt_secret: W#!v2n!A^e7M
-    upload_path: '/public/uploads/'
+    upload_path: '%kernel.project_dir%/public/uploads/'
+    public_path: '/uploads/'
     upload_naming_strategy: '{path}/{filename}.{extension}'
 
 services:
@@ -35,6 +36,6 @@ services:
 
     App\Service\FileUploader:
         arguments:
-            $rootPath: '%kernel.project_dir%'
             $uploadPath: '%upload_path%'
+            $publicPath: '%public_path%'
             $namingStrategy: '%upload_naming_strategy%'
