@@ -5,12 +5,14 @@ namespace App\Controller;
 
 use App\Entity;
 use App\Repository\ProjectRepository;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Entity\Repository\CategoryRepository;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,9 +108,8 @@ class CrudController extends AbstractController
     /**
      * @Route("/api/{entityName}/{id}", name="api_crud_update", methods={"PUT"})
      */
-    public function update(string $entityName, string $id, Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $manager):JsonResponse
+    public function update(string $entityName, string $id, Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $manager, FileUploader $fileUploader, LoggerInterface $logger): JsonResponse
     {
-
         /** @var Entity\User $user */
         $user = $tokenStorage->getToken()->getUser();
 
@@ -119,18 +120,36 @@ class CrudController extends AbstractController
         $entity = $this->getDoctrine()->getRepository($entityClassName)->find($id);
 
         if (!$entity) {
-            return new JsonResponse(["error"=>"resource is not available"], 404);
+            return new JsonResponse(["error" => "resource is not available"], 404);
         }
 
-        $values = $request->request->all() ?: $request->toArray();
+        try {
+            /* parse multipart/form-data content if possible */
+            $parsed = $fileUploader->digestFormContent($request, FileUploader::WRITE_CONTENT, "{public}$entityName/$id.{extension}");
+            $values = [];
+            $logger->debug("multipart/form-data successfully digested...");
+            foreach ($parsed as $parameters) {
+                $values[$parameters['name']] = $parameters['content'] ?? $parameters['path'] ?? '';
+            }
+        } catch (Exception $e) {
+            $logger->error($e);
+            $logger->debug("trying to fall back to default request");
+            //return new JsonResponse(["headers"=>$request->headers->all()], 400);
+            /* fall back to default request */
+            try {
+                $values = $request->request->all() ?: $request->toArray();
+            } catch (Exception $e) {
+                return new JsonResponse(["request" => $request->request->all(), "content" => $request->getContent(), "headers" => $request->headers->all()], 400);
+            }
+
+        }
 
         if (isset($values['id']) && $values['id'] != $entity->getId()) {
-            return new JsonResponse(["error"=>"data manipulation error: primary keys may not be altered"], 400);
+            return new JsonResponse(["error" => "data manipulation error: primary keys may not be altered"], 400);
         }
 
-
-        foreach ($values as $key=>$value) {
-            $methodName = "set".ucfirst($key);
+        foreach ($values as $key => $value) {
+            $methodName = "set" . ucfirst($key);
             try {
                 if (method_exists($entity, $methodName)) {
                     $entity->$methodName($value);
@@ -146,7 +165,7 @@ class CrudController extends AbstractController
         /** TODO: check permissions and ownership before updating entity */
         $manager->persist($entity);
         $manager->flush();
-        return new JsonResponse($entity, 201);
+        return new JsonResponse(["data" => $values, "headers" => $request->headers->all()], 201);
 
     }
     private function getEntityClassName($entityName):? string {
