@@ -16,7 +16,8 @@ security:
             security: false
         anonymous:
             # these routes are free to access (for now)
-            pattern: ^/api/(users|posts|null)$
+            # pattern: ^/api/(meta.*|null)$
+            pattern: ^/api/(meta|null)$
             anonymous: true
             lazy: true
             provider: app_user_provider
