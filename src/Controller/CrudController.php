@@ -125,7 +125,7 @@ class CrudController extends AbstractController
 
         try {
             /* parse multipart/form-data content if possible */
-            $parsed = $fileUploader->digestFormContent($request, FileUploader::WRITE_CONTENT, "{public}$entityName/$id.{extension}");
+            $parsed = $fileUploader->digestFormContent($request, FileUploader::WRITE_CONTENT, "{path}$entityName/$id-{fieldname}.{extension}", "{upload}$entityName/$id-{fieldname}.*");
             $values = [];
             $logger->debug("multipart/form-data successfully digested...");
             foreach ($parsed as $parameters) {
