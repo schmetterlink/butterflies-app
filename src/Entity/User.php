@@ -102,14 +102,14 @@ class User implements UserInterface
     }
 
 
-    public function getImageUrl(): ?string
+    public function getImage(): ?string
     {
-        return $this->imageUrl;
+        return $this->image;
     }
 
-    public function setImageUrl(?string $imageUrl): self
+    public function setImage(?string $image): self
     {
-        $this->imageUrl = $imageUrl;
+        $this->image = $image;
 
         return $this;
     }

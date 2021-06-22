@@ -58,5 +58,5 @@ trait FileTrait
      * @ORM\Column(type="string", length=255, options={"comment":"uploaded_file"})
      * @Serializer\Groups ({"admin", "detail", "list"})
      */
-    private $uri;
+    private $data;
 }

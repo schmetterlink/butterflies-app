@@ -72,14 +72,14 @@ class File
         return $this;
     }
 
-    public function getUri(): ?string
+    public function getData(): ?string
     {
-        return $this->uri;
+        return $this->data;
     }
 
-    public function setUri(string $uri): self
+    public function setData(string $data): self
     {
-        $this->uri = $uri;
+        $this->data = $data;
 
         return $this;
     }
