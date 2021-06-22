@@ -24,6 +24,7 @@
         "symfony/console": "*",
         "symfony/event-dispatcher": "*",
         "symfony/flex": "*",
+        "symfony/form": "*",
         "symfony/framework-bundle": "*",
         "symfony/monolog-bundle": "*",
         "symfony/proxy-manager-bridge": "^5.2",
