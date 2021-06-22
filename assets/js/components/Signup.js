@@ -140,7 +140,7 @@ const SignupForm = () => {
                             let errorCallback = function (error) {
                                 console.error(error.response);
                             }
-                            new Network().callApi("/auth/register", values, "POST", callback, errorCallback);
+                            new Network().callApi("/auth/register", values, undefined, "POST", callback, errorCallback);
                             setSubmitting(false);
                         }, 400);
                     }}
