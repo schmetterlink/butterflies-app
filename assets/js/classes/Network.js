@@ -21,27 +21,30 @@ class Network {
         this.token = token;
     }
     setState(state = undefined) {
-        console.debug("setting network"+(this.caller ? ' (and caller '+typeof this.caller+")" : '')+" state...");
+        console.debug("setting network" + (this.caller ? ' (and caller ' + typeof this.caller + ")" : '') + " state...");
         console.debug(state);
         this.state = state;
         if (this.caller && this.caller.setState) {
             this.caller.setState(state);
         }
     }
-    callApi(target, data = undefined, method = "GET", callback = null, errorCallback = null) {
+
+    callApi(target, data = undefined, headers = undefined, method = "GET", callback = null, errorCallback = null) {
         this.state.loading = true;
         let uri = target;
-        console.debug("trigger "+method+" request to API ("+uri+") with token "+this.token);
+        console.debug("trigger " + method + " request to API (" + uri + ") with token " + this.token + ". headers:");
+        if (headers === undefined) {
+            headers = {
+                'Authorization': `Bearer ${this.token}`,
+                'accept': `application/json`
+            };
+        }
+        console.debug(headers);
         if (data !== undefined) console.debug(data);
         axios[method.toLowerCase()](
             uri,
             data,
-            {headers:
-                    {
-                        'Authorization': `Bearer ${this.token}`,
-                        'accept': `application/json`
-                    }
-            }
+            headers
         ).then(result => {
             if (callback === null) {
                 console.debug(result);
