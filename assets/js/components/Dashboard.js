@@ -53,13 +53,13 @@ class Dashboard extends Component {
                 that.setState({user: userData, status: data.status, success: true, loading: false, userData: userData});
                 console.debug(that.state.metaData);
             }
-            that.network.callApi("/api/me", undefined, "POST", callback);
+            that.network.callApi("/api/me", undefined, undefined, "POST", callback);
         }
         /* TODO:
             find out why a 302 redirect occurs if we do not send the authentication token explicitly with this GET request.
             is it because the authentication headers are not sent with GET requests?
         */
-        this.network.callApi("/api/meta/user,file,project?token=" + this.state.token, undefined, "GET", metaCallback);
+        this.network.callApi("/api/meta/user,file,project?token=" + this.state.token, undefined, undefined, "GET", metaCallback);
     }
     createEntity(entity, data = {title: 'title', description: 'lorem ipsum'}, event) {
         console.debug("creating "+entity);
@@ -70,7 +70,7 @@ class Dashboard extends Component {
             console.debug(newEntity);
             that.getUserData();
         }
-        this.network.callApi("/api/" + entity, data, "POST", callback);
+        this.network.callApi("/api/" + entity, data, undefined, "POST", callback);
     }
     editProfile() {
         console.debug("edit user profile");
@@ -92,7 +92,7 @@ class Dashboard extends Component {
             that.getUserData();
         }
         if (action.name === "delete") {
-            this.network.callApi("/api/" + action.entity + "/" + data.id, undefined, "DELETE", callback);
+            this.network.callApi("/api/" + action.entity + "/" + data.id, undefined, undefined, "DELETE", callback);
         }
         if (action.name === "edit") {
             this.editorRef.current.setEntity(action.entity,data.id, ["id", "createdAt"]);
@@ -105,14 +105,17 @@ class Dashboard extends Component {
             //data.description += " edited";
             //this.network.callApi("project/"+data.id, data, "PUT", callback);
         }
-        console.debug(action.name + " "+ action.entity +" #"+data.id);
+        console.debug(action.name + " " + action.entity + " #" + data.id);
     }
-    submitChanges(data, entity, id) {
-        console.debug("submitting changes for entity "+entity+" #"+id+"...");
+
+    submitChanges(data, files, entity, id) {
+        console.debug("submitting changes for entity " + entity + " #" + id + "...");
+        console.debug("files: " + files);
         console.debug(data);
         let that = this;
         let callback = function (data) {
-            console.debug("data has been successfully persisted");
+            console.debug("data has been successfully persisted. response:");
+            console.debug(data);
             that.editorRef.current.handleClose();
             that.getUserData();
         }
@@ -121,7 +124,29 @@ class Dashboard extends Component {
             that.setState({status: error.response.status});
             console.error(error.response);
         }
-        this.network.callApi("/api/" + entity + "/" + id, data, "PUT", callback, errorCallback);
+        let headers = {
+            'Authorization': `Bearer ${this.state.token}`,
+            'accept': `application/json`,
+            'Content-Type': "multipart/form-data"
+        }
+        let formData = new FormData();
+        for (let key in data) {
+            formData.append(key, data[key]);
+        }
+        console.debug("attaching files...");
+        for (let key in files) {
+            for (let i = 0; i < files[key].length; i++) {
+                var f = files[key][i];
+                var file = files[key][i];
+                console.debug("attaching file #" + i + " " + file.name + " for " + key);
+                formData.append(key, file, file.name);
+            }
+        }
+        console.debug("submitting form data");
+        for (var key of formData.keys()) {
+            console.log(key + "=" + formData.get(key));
+        }
+        this.network.callApi("/api/" + entity + "/" + id, formData, headers, "PUT", callback, errorCallback);
     }
     filter (obj, keys) {
         let result = {}, key;

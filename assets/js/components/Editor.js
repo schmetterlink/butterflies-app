@@ -146,7 +146,7 @@ class EditorNaked extends React.Component {
         event.preventDefault();
         console.debug("submitting data fields for "+this.state.entity+" #"+this.state.ideal);
         if (this.props.submitCallback) {
-            this.props.submitCallback(this.state.data, this.state.entity, this.state.id, event);
+            this.props.submitCallback(this.state.data, this.state.files, this.state.entity, this.state.id, event);
         }
 
     }
