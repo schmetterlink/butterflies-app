@@ -14,6 +14,7 @@ use Entity\Repository\CategoryRepository;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -131,15 +132,15 @@ class CrudController extends AbstractController
             foreach ($parsed as $parameters) {
                 $values[$parameters['name']] = $parameters['content'] ?? $parameters['path'] ?? '';
             }
-        } catch (Exception $e) {
+        } catch (BadRequestException $e) {
             $logger->error($e);
             $logger->debug("trying to fall back to default request");
             //return new JsonResponse(["headers"=>$request->headers->all()], 400);
             /* fall back to default request */
             try {
                 $values = $request->request->all() ?: $request->toArray();
-            } catch (Exception $e) {
-                return new JsonResponse(["request" => $request->request->all(), "content" => $request->getContent(), "headers" => $request->headers->all()], 400);
+            } catch (BadRequestException $e) {
+                return new JsonResponse(["error" => $e->getMessage()], 400);
             }
 
         }
