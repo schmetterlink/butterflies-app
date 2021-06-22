@@ -166,13 +166,21 @@ class Dashboard extends Component {
         this.title = "Welcome "+this.state.user.name;
         const loading = this.state.loading;
 
-        let user = this.filter(this.state.user, ["id","name","email"]);
+        let user = this.filter(this.state.user, ["id", "name", "email", "imageUrl"]);
 
         return(
             <Paper>
                 <Table>
                     <TableHead>
                         <TableRow key={"heading-dashboard"}>
+                            <TableCell className={"profilePic"}>
+                                {loading || this.state.userData === undefined ? (
+                                    <img alt="placeholder" src={"/build/assets/images/userprofile-placeholder.jpg"}/>
+                                ) : (
+                                    <img alt={this.state.userData.name} src={this.state.userData.imageUrl}/>
+                                )
+                                }
+                            </TableCell>
                             <TableCell>
                                 <h1>{this.title}</h1>
                                 <h4>This is your <strong>hirefly</strong> dashboard</h4>
