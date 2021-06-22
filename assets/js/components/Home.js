@@ -15,10 +15,12 @@ class Home extends Component {
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-
-                    <Link className={"navbar-brand"} to={"/"}><img
-                        src={'/build/images/ci/hirefly-final-magenta-black-matte-animated.gif'}
-                        alt='hirefly.de'/></Link>
+                    <Link className={"navbar-brand"} to={"/"}>
+                        <img
+                            src={'/build/images/ci/hirefly-final-magenta-black-matte-animated.gif'}
+                            alt='hirefly.de'/>
+                        <span className="brand">hirefly.de</span>
+                    </Link>
                     <div className="collapse navbar-collapse" id="navbarText">
                         <ul className="navbar-nav mr-auto">
 
@@ -47,8 +49,8 @@ class Home extends Component {
                     </div>
                 </nav>
                 <Switch>
-                    <Redirect exact from="/" to="/users" />
-                    <Route path="/dashboard" component={Dashboard} />
+                    <Redirect exact from="/" to="/login"/>
+                    <Route path="/dashboard" component={Dashboard}/>
                     <Route path="/login" component={Login} />
                     <Route path="/logout" component={Logout}/>
                     <Route path="/signup" component={Signup}/>

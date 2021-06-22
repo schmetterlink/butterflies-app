@@ -15,5 +15,33 @@ label.checkbox {
 }
 
 button[type="submit"] {
-    margin-top: 1rem;
-}   
+    margin-top: 0rem;
+}
+
+.navbar-brand img {
+    width: 4%;
+}
+
+.navbar-nav {
+    display: flex;
+}
+
+.navbar-nav li {
+    float: left;
+}
+
+.MuiPaper-root {
+    background-color: var(--gray-1) !important;
+}
+
+.MuiTableCell-root {
+    border-bottom: 1px dotted var(--gray-1-70) !important;
+}
+
+.MuiTableCell-body, .MuiTableCell-head {
+    color: var(--gray-2-30) !important;
+}
+
+.EditorNaked-paper-1 {
+    background-color: var(--gray-1) !important;
+}

@@ -19,38 +19,33 @@ html {
 }
 
 :root {
-    --gray-900: #1a202c;
-    --gray-800: #2d3748;
-    --gray-700: #4a5568;
-    --gray-600: #718096;
-    --gray-500: #a0aec0;
-    --gray-400: #cbd5e0;
-    --gray-300: #e2e8f0;
-    --gray-200: #edf2f7;
-    --gray-100: #f7fafc;
-    --red-100: #fff5f5;
-    --red-200: #fed7d7;
-    --red-300: #feb2b2;
-    --red-400: #fc8181;
-    --red-500: #f56565;
-    --red-600: #e53e3e;
-    --red-700: #c53030;
-    --red-800: #9b2c2c;
-    --red-900: #742a2a;
-    --blue-100: #ebf8ff;
-    --blue-200: #bee3f8;
-    --blue-300: #90cdf4;
-    --blue-400: #63b3ed;
-    --blue-500: #4299e1;
-    --blue-600: #3182ce;
-    --blue-700: #2b6cb0;
-    --blue-800: #2c5282;
-    --blue-900: #2a4365;
+    --primary-1: #ED1E79;
+    --primary-2: #5EC7FF;
+    --primary-3: #534741;
+
+    --secondary-1: #F3FF77;
+    --secondary-2: #F98C00;
+    --secondary-3: #5CFF00;
+
+    --gray-1: #090911;
+    --gray-1-95: #14141a;
+    --gray-1-90: #222229;
+    --gray-1-85: #313136;
+    --gray-1-80: #383840;
+    --gray-1-75: #44444a;
+    --gray-1-70: #505058;
+    --gray-1-30: #837f87;
+    --gray-1-10: #bdbabf;
+    --gray-2: #A6A3A3;
+    --gray-2-70: #cac8c8;
+    --gray-2-30: #dbdada;
+    --gray-2-10: #ededed;
+
     --white: white;
-    --red: #f56565;
-    --text-decoration-color: var(--gray-400);
-    --text-color: var(--gray-800);
-    --focus-ring-color: var(--blue-500);
+
+    --text-decoration-color: var(--gray-2);
+    --text-color: var(--gray-2);
+    --focus-ring-color: var(--primary-2);
 }
 
 body {
@@ -66,7 +61,7 @@ body {
 @media (prefers-color-scheme: dark) {
     body {
         color: white;
-        background-color: var(--gray-900);
+        background-color: var(--gray-1);
         caret-color: white;
     }
 }
@@ -121,6 +116,10 @@ h6 {
     line-height: 1.5;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-2);
+}
+
 p {
     margin-bottom: 1.563rem;
 }
@@ -141,20 +140,20 @@ a {
 
 @media (hover: hover) {
     a:hover {
-        text-decoration-color: var(--gray-800);
+        text-decoration-color: var(--secondary-1);
     }
 }
 
 @media (hover: hover) and (prefers-color-scheme: dark) {
     a:hover {
-        text-decoration-color: white;
+        text-decoration-color: var(--gray-2);
     }
 }
 
 @media (prefers-color-scheme: dark) {
     a {
-        text-decoration-color: var(--gray-700);
-        -webkit-text-decoration-color: var(--gray-700);
+        text-decoration-color: var(--gray-1);
+        -webkit-text-decoration-color: var(--secondary-1);
     }
 }
 
@@ -168,7 +167,7 @@ small {
 }
 
 hr {
-    border: 1px solid var(--gray-700);
+    border: 1px solid var(--gray-2);
     margin: 3.052rem 0;
 }
 
@@ -180,13 +179,14 @@ label {
 }
 
 input[type="email"],
+input[type="password"],
 input[type="text"],
 input[type="number"] {
     padding: 0.65rem 0.5rem;
     font-size: 1rem;
-    border: 2px solid var(--gray-200);
-    background-color: var(--gray-100);
-    color: var(--gray-800);
+    border: 2px solid var(--primary-2);
+    background-color: var(--gray-1-70);
+    color: var(--primary-2);
     border-radius: 10px;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -195,14 +195,16 @@ input[type="number"] {
 
 @media (prefers-color-scheme: dark) {
     input[type="email"],
+    input[type="password"],
     input[type="text"],
     input[type="number"] {
-        background-color: var(--gray-800);
-        border-color: var(--gray-700);
-        color: white;
+        background-color: var(--gray-1-70);
+        border-color: var(--primary-2);
+        color: var(--gray-2-10);
     }
 
     input[type="email"]::placeholder,
+    input[type="password"]::placeholder,
     input[type="text"]::placeholder,
     input[type="number"]::placeholder,
     select,
@@ -213,6 +215,7 @@ input[type="number"] {
 
 input[type="email"],
 input[type="text"],
+input[type="password"],
 input[type="number"],
 textarea,
 select {
@@ -388,6 +391,7 @@ input[type="radio"]:checked::before {
 }
 
 input[type="submit"],
+input[type="password"],
 input[type="reset"],
 input[type="button"],
 button {
@@ -415,17 +419,19 @@ button {
 @media (prefers-color-scheme: dark) {
     input[type="submit"],
     input[type="reset"],
+    input[type="password"],
     input[type="button"],
     button {
         background-color: white;
         border: 2px solid white;
-        color: var(--gray-800);
+        color: var(--gray-1);
     }
 }
 
 @media (hover: hover) {
     input[type="submit"]:hover,
     input[type="reset"]:hover,
+    input[type="password"]:hover,
     input[type="button"]:hover,
     button:hover {
         cursor: pointer;
@@ -435,6 +441,7 @@ button {
 
 @media (hover: hover) and (prefers-color-scheme: dark) {
     input[type="submit"]:hover,
+    input[type="password"]:hover,
     input[type="reset"]:hover,
     input[type="button"]:hover,
     button:hover {
@@ -445,9 +452,11 @@ button {
 
 button:focus-visible,
 input[type="submit"]:focus-visible,
+input[type="password"]:focus-visible,
 input[type="reset"]:focus-visible,
 input[type="button"]:focus-visible {
     border-color: var(--focus-ring-color);
+    background-colod: var(--gray-1);
     outline: none;
 }
 
@@ -626,4 +635,8 @@ button[type="reset"] {
 button.secondary:hover,
 button[type="reset"]:hover {
     background-color: var(--gray-400);
+}
+
+.MuiPaper-root {
+    background-color: var(--gray-1);
 }
