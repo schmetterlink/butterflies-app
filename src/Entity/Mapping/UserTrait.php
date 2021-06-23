@@ -67,8 +67,8 @@ trait UserTrait
     private $image;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true, options={"comment":"comma_separated"})
-     * @Groups ({"admin", "detail", "list"})
+     * @ORM\Column(name="tags", type="string", length=255, nullable=true, options={"comment":"comma_separated"})
+     * @Groups ({"admin", "detail", "list", "edit"})
      */
     private $tags;
 
