@@ -15,9 +15,10 @@ class NestedList {
     getUKI(prefix = "key") {
         ++this.appendix;
         //console.debug("unique key: "+prefix+"-"+this.appendix);
-        return prefix+"-"+this.appendix;
+        return prefix + "-" + this.appendix;
     }
-    renderData(prefix, data, classes) {
+
+    renderData(prefix, data, classes, maxdepth = undefined) {
         let props = [];
         let relations = [];
         if (Object.keys(data).length > 0) {
@@ -25,7 +26,7 @@ class NestedList {
                 let table = [];
                 if (typeof data[key] != "object" || data[key] === null) {
                     props.push(
-                        <TableRow key={this.getUKI(prefix+"-row-"+key)}>
+                        <TableRow key={this.getUKI(prefix + "-row-" + key)}>
                             <TableCell>
                                 {key}
                             </TableCell>
@@ -35,8 +36,8 @@ class NestedList {
                         </TableRow>
                     );
                 } else {
-                    table = this.renderObject(prefix+"-"+key, data[key], classes);
-                    relations.push(<h2 key={this.getUKI(prefix+"-h2-"+key)}>{key}</h2>);
+                    table = this.renderObject(prefix + "-" + key, data[key], classes, 0, maxdepth);
+                    relations.push(<h2 key={this.getUKI(prefix + "-h2-" + key)}>{key}</h2>);
                     relations.push(table);
                 }
             }
@@ -51,31 +52,30 @@ class NestedList {
         );
     }
 
-    renderObject(prefix, object, classes, level, maxdepth) {
+    renderObject(prefix, object, classes, level = 1, maxdepth = undefined) {
         if (classes === undefined) {
             classes = "sublist";
         }
-        if (level === undefined) {
-            level = 1;
-        }
-        if (level > maxdepth && maxdepth !== undefined) {
-            return null;
+        if (maxdepth !== undefined && level > maxdepth) {
+            console.log("renderObject max nesting level reached (" + level + "/" + maxdepth + ")");
+            return object?.id ? object.id : "[OBJECT]";
         }
         let head = [];
         let body = [];
         if (typeof object == "object") {
-            if (level % 2 === 0) {
+            if (level % 2 === 1) {
                 /* horizontal */
                 let cols = []
                 for (let key in object) {
                     let cname;
-                    cname = "field-"+key;
+                    cname = "field-" + key;
                     if (parseInt(key) === key) {
                         cname = "field-list";
                     }
                     if (typeof object[key] == 'object') {
                         console.debug(cname);
-                        cols.push(<TableCell className={cname} title={key} key={this.getUKI(prefix+"-"+level+"-"+key)}>{this.renderObject(prefix, object[key],"sublist-item", level + 1)}</TableCell>)
+                        cols.push(<TableCell className={cname} title={key}
+                                             key={this.getUKI(prefix + "-" + level + "-" + key)}>{this.renderObject(prefix, object[key], "sublist-item", level + 1, maxdepth)}</TableCell>)
                     } else {
                         cols.push(<TableCell className={cname} title={key} key={this.getUKI(prefix+"-"+level+"-"+key)}>{object[key]}</TableCell>)
                     }
@@ -106,7 +106,8 @@ class NestedList {
                             cname = "field-list";
                         }
                         if (typeof object[key] == 'object') {
-                            body.push(<TableRow key={this.getUKI(prefix+"-"+key)}><TableCell className={cname} title={key}>{this.renderObject(prefix, object[key],"sublist-item", level + 1)}</TableCell></TableRow>)
+                            body.push(<TableRow key={this.getUKI(prefix + "-" + key)}><TableCell className={cname}
+                                                                                                 title={key}>{this.renderObject(prefix, object[key], "sublist-item", level + 1, maxdepth)}</TableCell></TableRow>)
                         } else {
                             body.push(<TableRow key={this.getUKI(prefix+"-"+key)}><TableCell className={cname} title={key}>{object[key]}</TableCell></TableRow>)
                         }
@@ -116,33 +117,40 @@ class NestedList {
             }
             return (<Table className={classes+" objectTable level-"+level}><TableHead>{head}</TableHead><TableBody>{body}</TableBody></Table>)
         } else {
-            return (<Table className={classes+" flatTable level-"+level}><TableBody><TableRow><TableCell>{object}</TableCell></TableRow></TableBody></Table>)
+            return (<Table
+                className={classes + " flatTable level-" + level}><TableBody><TableRow><TableCell>{object}</TableCell></TableRow></TableBody></Table>)
         }
     }
+
     editEntry(data, action, event = undefined) {
-        console.debug("trigger callback function for action "+action.name);
+        console.debug("trigger callback function for action " + action.name);
         if (action.callback) {
             action.callback(data, action, event);
         }
     }
 
-    renderRows(prefix, rows, classes, level, maxdepth) {
+    renderRows(prefix, rows, classes, level = 1, maxdepth = undefined) {
+        if (maxdepth !== undefined && level > maxdepth) {
+            console.log("renderRows max nesting level reached (" + level + "/" + maxdepth + ")");
+            return null;
+        }
         let tableRows = [];
-        if (rows.length > 0) console.debug("rendering ["+rows.length+"] rows");
+        if (rows.length > 0) console.debug("rendering [" + rows.length + "] rows");
         for (let row in rows) {
-            let cname = "field-row-"+row;
+            let cname = "field-row-" + row;
             if (typeof rows[row] == 'object' && rows[row] !== undefined) {
                 let cols = [];
                 for (let key in rows[row]) {
                     let cname;
                     let object = rows[row][key];
-                    cname = "field-"+key;
+                    cname = "field-" + key;
                     if (parseInt(key) === key) {
                         cname = "field-list";
                     }
                     let keyName = this.getUKI(prefix+"-"+row+"-"+key);
                     if (typeof object == 'object') {
-                        cols.push(<TableCell className={cname} title={key} key={keyName}>{this.renderObject(prefix+"-"+key, object,"sublist-item", level + 1)}</TableCell>)
+                        cols.push(<TableCell className={cname} title={key}
+                                             key={keyName}>{this.renderObject(prefix + "-" + key, object, "sublist-item", level + 1, maxdepth)}</TableCell>)
                     } else {
                         cols.push(<TableCell className={cname} title={key} key={keyName}>{object}</TableCell>)
                     }

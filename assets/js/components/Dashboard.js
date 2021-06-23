@@ -74,7 +74,7 @@ class Dashboard extends Component {
     }
     editProfile() {
         console.debug("edit user profile");
-        this.editorRef.current.setEntity("user",this.state.userData.id, ["id","projects","createdAt"]);
+        this.editorRef.current.setEntity("user", this.state.userData.id, ["id", "projects", "createdAt", "files", "email"]);
         if (this.editorRef.current.state.data === this.state.userData) {
             this.editorRef.current.toggle();
         } else {
@@ -206,7 +206,8 @@ class Dashboard extends Component {
                             .renderData(
                                 "data",
                                 {projects: this.state.userData.projects},
-                                "alternateRows"
+                                "alternateRows",
+                                1
                             )
                         }
                         <Button
@@ -224,7 +225,8 @@ class Dashboard extends Component {
                             .renderData(
                                 "data",
                                 {files: this.state.userData.files},
-                                "alternateRows"
+                                "alternateRows",
+                                1
                             )
                         }
                         <Button
