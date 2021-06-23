@@ -44,7 +44,7 @@ trait UserTrait
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=180)
      * @Groups ({"admin"})
      *
      * @Assert\NotBlank(message = "must not be blank")
@@ -65,6 +65,12 @@ trait UserTrait
      * @Groups ({"admin", "detail", "list", "edit"})
      */
     private $image;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true, options={"comment":"comma_separated"})
+     * @Groups ({"admin", "detail", "list"})
+     */
+    private $tags;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Project", mappedBy="user", fetch="EAGER")

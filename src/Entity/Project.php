@@ -22,6 +22,7 @@ class Project
 {
     use ProjectTrait, OwnedTrait, TimestampTrait;
 
+
     /**
      * Project constructor.
      */
@@ -57,6 +58,18 @@ class Project
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getTags(): ?string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
 
         return $this;
     }

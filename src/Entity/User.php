@@ -114,13 +114,26 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getTags(): ?string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
     /**
      * @Serializer\SerializedName("projects")
      * @Serializer\Groups({"admin", "list", "detail"})
      *
      * @return Collection
      */
-    public function getProjects() {
+    public function getProjects()
+    {
         return $this->projects;
     }
 

@@ -45,6 +45,12 @@ trait ProjectTrait
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true, options={"comment":"comma_separated"})
+     * @Groups ({"admin", "detail", "list"})
+     */
+    private $tags;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\File", mappedBy="project", fetch="EAGER")
      * @Groups ({"admin", "detail"})
      */
