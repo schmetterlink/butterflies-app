@@ -26,6 +26,7 @@ use Symfony\Component\Validator\Mapping\MetadataInterface;
 use Symfony\Component\Validator\Mapping\PropertyMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\VarDumper\VarDumper;
+use TypeError;
 
 class CrudController extends AbstractController
 {
@@ -154,9 +155,17 @@ class CrudController extends AbstractController
             try {
                 if (method_exists($entity, $methodName)) {
                     $entity->$methodName($value);
+                } else {
+                    $logger->warning(
+                        "UPDATE for {entity}.{$key} failed. Field could not be set to {$value} - possibly due to a missing setter?",
+                        ["entity" => $entityName, "key" => $key, "value" => $value]
+                    );
                 }
-            } catch (Exception $e) {
-
+            } catch (Exception | TypeError $e) {
+                $logger->error(
+                    "UPDATE for {entity}.{$key} to '{value}' failed. Exception thrown: {errorMessage}",
+                    ["entity" => $entityName, "key" => $key, "value" => $value, "errorMessage" => $e->getMessage()]
+                );
             }
         }
         if (method_exists($entity, "setUserId")) {
