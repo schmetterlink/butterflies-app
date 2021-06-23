@@ -106,20 +106,24 @@ class EditorNaked extends React.Component {
             data = this.state.data;
         }
         let tableRows = [];
-        console.debug("creating input fields for data.");
         if (this.state.protectedFields.length) console.debug("protected fields: " + this.state.protectedFields.toString());
-        console.debug(data);
         for (let row in data) {
             let cname = "field-row-" + row;
             let readOnly = this.state.protectedFields.includes(row);
             let fieldMeta = this.getMetaDataFor(row);
-            let inputType = fieldMeta?.options?.comment === "uploaded_file" ? "file" : "text";
+            let comment = fieldMeta?.options?.comment;
+            let inputType = comment?.indexOf("upload") !== undefined ? "file" : "text";
+            let image = '';
+            let value = data[row];
+            if (typeof value === "object" && value !== null) {
+                value = value?.id ? value.id : '[OBJECT]';
+            }
 
             let inputField = <input
                 name={row}
                 readOnly={readOnly}
                 type={inputType}
-                defaultValue={data[row]}
+                defaultValue={value}
                 onChange={this.handleChange.bind(this)}
             />
 
@@ -170,7 +174,7 @@ class EditorNaked extends React.Component {
                         <form id={"edit-"+this.state.entity+"-"+this.state.data.id} method="PUT" onSubmit={this.submitData.bind(this)}>
                         <Table>
                             <TableHead><TableRow><TableCell
-                                colSpan={2}>Editor {this.state.entity} #{this.state.id}</TableCell></TableRow></TableHead>
+                                colSpan={3}>Editor {this.state.entity} #{this.state.id}</TableCell></TableRow></TableHead>
                             <TableBody>
                                 {this.getFields()}
                             </TableBody>
