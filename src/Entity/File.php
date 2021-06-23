@@ -7,7 +7,9 @@ use App\Entity\Mapping\OwnedTrait;
 use App\Entity\Mapping\TimestampTrait;
 use App\Entity\Mapping\FileTrait;
 use App\Repository\FileRepository;
+use App\Repository\ProjectRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @ORM\Entity (repositoryClass=FileRepository::class)
@@ -39,6 +41,16 @@ class File
     public function getProjectId(): ?int
     {
         return $this->projectId;
+    }
+
+    public function setProject(int|Project $project): self
+    {
+        if ($project instanceof Project) {
+            $this->project = $project;
+        } else {
+            $this->setProjectId($project);
+        }
+        return $this;
     }
 
     public function setProjectId(int $projectId): self
