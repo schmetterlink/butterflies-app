@@ -7,6 +7,7 @@ use App\Entity\User;
 use Doctrine\Common\Annotations\AnnotationReader;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,14 +32,31 @@ class ApiController extends AbstractController
     /** @var User $user */
     private $user;
 
-    public function __construct(TokenStorageInterface $tokenStorage) {
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
         $this->user = $tokenStorage->getToken()->getUser();
 
         $this->classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-        $this->normalizer = [
-            new Serializer\Normalizer\ObjectNormalizer($this->classMetadataFactory),
-            new Serializer\Normalizer\DateTimeNormalizer([$this->classMetadataFactory])
+
+        $defaultContext = [
+            Serializer\Normalizer\AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+                $reflect = new ReflectionClass($object);
+                return $reflect->getShortName() . "." . $object->getId();
+            },
         ];
+
+
+        $this->normalizer = [
+            new Serializer\Normalizer\ObjectNormalizer($this->classMetadataFactory, null, null, null, null, null, $defaultContext),
+            new Serializer\Normalizer\DateTimeNormalizer(),
+        ];
+        /*
+        [
+            new Serializer\Normalizer\ObjectNormalizer($this->classMetadataFactory),
+            new Serializer\Normalizer\DateTimeNormalizer([$this->classMetadataFactory]),
+        ];
+        */
+
 
         $this->serializer = new Serializer\Serializer($this->normalizer, [new Serializer\Encoder\JsonEncoder()]);
     }
@@ -68,7 +86,11 @@ class ApiController extends AbstractController
         //$user = $this->serializer->normalize($this->user, null, ['groups' => 'list']);
 
         //$user = $this->serializer->normalize($user, null, $defaultContext);
-        $userData = $this->serializer->serialize($this->user, 'json', ['groups' => 'list']);
+        $userData = $this->serializer->serialize(
+            $this->user,
+            'json',
+            ['groups' => 'list']
+        );
         $response = new JsonResponse($userData);
         return $response;
     }
