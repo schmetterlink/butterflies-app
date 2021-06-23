@@ -31,7 +31,7 @@ class NestedList {
                                 {key}
                             </TableCell>
                             <TableCell>
-                                {data[key]}
+                                <span className={key}>{data[key]}</span>
                             </TableCell>
                         </TableRow>
                     );
@@ -58,7 +58,7 @@ class NestedList {
         }
         if (maxdepth !== undefined && level > maxdepth) {
             console.log("renderObject max nesting level reached (" + level + "/" + maxdepth + ")");
-            return object?.id ? object.id : "[OBJECT]";
+            return object?.id ? object.id : "";
         }
         let head = [];
         let body = [];
@@ -77,7 +77,9 @@ class NestedList {
                         cols.push(<TableCell className={cname} title={key}
                                              key={this.getUKI(prefix + "-" + level + "-" + key)}>{this.renderObject(prefix, object[key], "sublist-item", level + 1, maxdepth)}</TableCell>)
                     } else {
-                        cols.push(<TableCell className={cname} title={key} key={this.getUKI(prefix+"-"+level+"-"+key)}>{object[key]}</TableCell>)
+                        cols.push(<TableCell className={cname} title={key}
+                                             key={this.getUKI(prefix + "-" + level + "-" + key)}><span
+                            className={key}>{object[key]}</span></TableCell>)
                     }
                 }
                 body.push(<TableRow>{cols}</TableRow>)
@@ -108,9 +110,12 @@ class NestedList {
                         }
                         if (typeof object[key] == 'object') {
                             body.push(<TableRow key={this.getUKI(prefix + "-" + key)}><TableCell className={cname}
-                                                                                                 title={key}>{this.renderObject(prefix, object[key], "sublist-item", level + 1, maxdepth)}</TableCell></TableRow>)
+                                                                                                 title={key}><span
+                                className={key}>{this.renderObject(prefix, object[key], "sublist-item", level + 1, maxdepth)}</span></TableCell></TableRow>)
                         } else {
-                            body.push(<TableRow key={this.getUKI(prefix+"-"+key)}><TableCell className={cname} title={key}>{object[key]}</TableCell></TableRow>)
+                            body.push(<TableRow key={this.getUKI(prefix + "-" + key)}><TableCell className={cname}
+                                                                                                 title={key}><span
+                                className={key}>{object[key]}</span></TableCell></TableRow>)
                         }
                     }
 
@@ -150,10 +155,11 @@ class NestedList {
                     }
                     let keyName = this.getUKI(prefix+"-"+row+"-"+key);
                     if (typeof object == 'object') {
-                        cols.push(<TableCell className={cname} title={key}
-                                             key={keyName}>{this.renderObject(prefix + "-" + key, object, "sublist-item", level + 1, maxdepth)}</TableCell>)
+                        cols.push(<TableCell className={cname} title={key} key={keyName}><span
+                            className={key}>{this.renderObject(prefix + "-" + key, object, "sublist-item", level + 1, maxdepth)}</span></TableCell>)
                     } else {
-                        cols.push(<TableCell className={cname} title={key} key={keyName}>{object}</TableCell>)
+                        cols.push(<TableCell className={cname} title={key} key={keyName}><span
+                            className={key}>{object}</span></TableCell>)
                     }
                 }
                 let actionButtons = [];
@@ -164,7 +170,9 @@ class NestedList {
                 cols.push(<TableCell key={this.getUKI(prefix+"-cell-"+row)}>{actionButtons}</TableCell>);
                 tableRows.push(<TableRow key={this.getUKI(prefix+"-list-"+row)}>{cols}</TableRow>);
             } else {
-                tableRows.push(<TableRow key={this.getUKI(prefix+"-list-"+row)}><TableCell className={cname} title={"#"+(row+1)}>{rows[row]}</TableCell></TableRow>)
+                tableRows.push(<TableRow key={this.getUKI(prefix + "-list-" + row)}><TableCell className={cname}
+                                                                                               title={"#" + (row + 1)}><span
+                    className={key}>{rows[row]}</span></TableCell></TableRow>)
             }
         }
         return tableRows;
