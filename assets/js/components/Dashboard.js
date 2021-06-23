@@ -171,7 +171,7 @@ class Dashboard extends Component {
         return(
             <Paper>
                 <Table>
-                    <TableHead>
+                    <TableHead className={"big-header"}>
                         <TableRow key={"heading-dashboard"}>
                             <TableCell className={"profilePic"}>
                                 {loading || this.state.userData === undefined ? (

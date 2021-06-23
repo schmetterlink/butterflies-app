@@ -34,12 +34,15 @@ class Home extends Component {
                                 }
                             </li>
                             <li className="nav-item">
+                                <Link className={"nav-link"} to={"/search"}> Search </Link>
+                            </li>
+                            <li className="nav-item">
                                 {this.state.user === null
                                     ?
                                     <span>
-                                        <Link className={"nav-link"} to={"/login"}> Login </Link>
+                                        <Link className={"nav-link login"} to={"/login"}> Login </Link>
                                     </span>
-                                    : <Link className={"nav-link"} to={"/logout"}> Logout </Link>
+                                    : <Link className={"nav-link logout"} to={"/logout"}> Logout </Link>
                                 }
                             </li>
 

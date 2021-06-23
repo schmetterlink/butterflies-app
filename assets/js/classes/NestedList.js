@@ -93,7 +93,8 @@ class NestedList {
                         }
 
                     }
-                    cols.push(<TableCell key={this.getUKI(prefix + "-actions")}>actions</TableCell>);
+                    cols.push(<TableCell key={this.getUKI(prefix + "-actions")}
+                                         className={"action-panel"}>actions</TableCell>);
                     if (!allNumeric) {
                         head.push(<TableRow key={this.getUKI(prefix+"-fieldame")}>{cols}</TableRow>)
                     }
