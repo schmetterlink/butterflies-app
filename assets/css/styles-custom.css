@@ -22,10 +22,6 @@ button[type="submit"] {
     background-color: var(--gray-1) !important;
 }
 
-.MuiTableCell-root.profilePic {
-    padding: 0;
-}
-
 .MuiTableCell-root {
     border-bottom: 1px dotted var(--gray-1-70) !important;
 }

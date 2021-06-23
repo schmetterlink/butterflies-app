@@ -66,9 +66,17 @@ body {
 }
 
 .navbar-nav a:hover {
-    background-color: var(--primary-1);
+    background-color: var(--primary-2);
     color: var(--gray-1);
     transition: 0.3s;
+}
+
+.editor-modal {
+    background-color: var(--gray-1);
+}
+
+.navbar-nav a.logout:hover {
+    background-color: var(--primary-1);
 }
 
 .navbar-brand {
@@ -115,9 +123,24 @@ input[readonly] {
     border-color: #ccc;
 }
 
+.MuiTableCell-root.profilePic {
+    padding: 0;
+    margin: 0;
+    width: 16em;
+}
+
+.big-header {
+    /* background-color: var(--gray-1-90); */
+}
+
+.big-header th {
+}
+
 .profilePic img {
-    height: 15em;
-    width: 15em;
+    height: 16em;
+    width: 16em;
+    margin: 0;
+    padding: 0;
     object-fit: cover;
     border-radius: 0.25em;
 }
@@ -128,3 +151,6 @@ input[readonly] {
     width: 40px;
 }
 
+.action-panel {
+    width: 15em;
+}
