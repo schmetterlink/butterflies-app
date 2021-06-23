@@ -19,14 +19,12 @@ class Home extends Component {
                         <img
                             src={'/build/images/ci/hirefly-final-magenta-black-matte-animated.gif'}
                             alt='hirefly.de'/>
-                        <span className="brand">hirefly.de</span>
+                        <span className="brand"><span style={{color: "var(--primary-1)"}}>hire</span><span
+                            style={{color: "var(--primary-2)"}}>fly</span><span
+                            style={{color: "var(--gray-1-70)"}}>.de</span></span>
                     </Link>
                     <div className="collapse navbar-collapse" id="navbarText">
                         <ul className="navbar-nav mr-auto">
-
-                            <li className="nav-item">
-
-                            </li>
                             <li className="nav-item">
                                 {this.state.user === null
                                     ?
