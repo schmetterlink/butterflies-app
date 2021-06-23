@@ -112,7 +112,7 @@ class EditorNaked extends React.Component {
             let readOnly = this.state.protectedFields.includes(row);
             let fieldMeta = this.getMetaDataFor(row);
             let comment = fieldMeta?.options?.comment;
-            let inputType = comment?.indexOf("upload") !== undefined ? "file" : "text";
+            let inputType = comment && comment?.indexOf("upload") > -1 ? "file" : "text";
             let image = '';
             let value = data[row];
             if (typeof value === "object" && value !== null) {
