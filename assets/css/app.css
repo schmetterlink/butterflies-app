@@ -116,9 +116,10 @@ input[readonly] {
 }
 
 .profilePic img {
-    height: 120px;
-    width: 120px;
+    height: 15em;
+    width: 15em;
     object-fit: cover;
+    border-radius: 0.25em;
 }
 
 .thumbnail {
