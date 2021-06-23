@@ -56,7 +56,12 @@ body {
     list-style-type: none;
 }
 
+.MuiTable-root.alternateRows span.tags {
+    visibility: hidden;
+}
+
 ul.taglist {
+    visibility: visible;
     display: inline;
     list-style-type: none;
 }

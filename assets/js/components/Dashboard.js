@@ -38,14 +38,6 @@ class Dashboard extends Component {
         this.getUserData();
     }
 
-    componentDidUpdate() {
-        var x = document.getElementsByClassName("tags");
-        for (var i = 0; i < x.length; i++) {
-            x[i].innerHTML = this.showTags(x[i].innerHTML);
-        }
-        console.log("rendering finished");
-    }
-
     getUserData() {
         var that = this;
         let metaCallback = function (metaData) {
@@ -170,11 +162,20 @@ class Dashboard extends Component {
         return result;
     }
 
+    componentDidUpdate() {
+        var x = document.getElementsByClassName("tags");
+        for (var i = 0; i < x.length; i++) {
+            x[i].querySelectorAll('ul.taglist').forEach(n => n.remove());
+            x[i].innerHTML += this.showTags(x[i].innerHTML);
+        }
+        console.log("rendering finished");
+    }
+
     showTags(tags) {
         let items = '';
         let taglist = tags.split(",");
         for (var i = 0; i < taglist.length; i++) {
-            items += "<li>" + taglist[i] + "</li>";
+            items += taglist[i].trim() ? "<li>" + taglist[i].trim() + "</li>" : "";
         }
         return "<ul class='taglist'>" + items + "</ul>";
     }
