@@ -124,7 +124,7 @@ class EditorNaked extends React.Component {
             />
 
             if (inputType === "file") {
-                console.log("file input " + row + " detected.");
+                image = <img alt={row} src={data[row]} className={"thumbnail"}/>
                 inputField = <input
                     name={row}
                     readOnly={readOnly}
@@ -135,8 +135,11 @@ class EditorNaked extends React.Component {
             tableRows.push(
                 <TableRow key={cname}>
                     <TableCell>{row}</TableCell>
-                    <TableCell>
+                    <TableCell className={comment}>
                         {inputField}
+                    </TableCell>
+                    <TableCell>
+                        {image}
                     </TableCell>
                 </TableRow>);
         }
