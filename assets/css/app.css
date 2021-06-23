@@ -64,4 +64,13 @@ input[readonly] {
 
 .profilePic img {
     height: 120px;
+    width: 120px;
+    object-fit: cover;
 }
+
+.thumbnail {
+    object-fit: cover;
+    height: 40px;
+    width: 40px;
+}
+
