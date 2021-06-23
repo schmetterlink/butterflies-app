@@ -26,16 +26,26 @@ class Dashboard extends Component {
         this.editorRef = React.createRef();
         this.network = new Network(this, window.REACT_SERVER_PROPS.token);
     }
+
     componentDidCatch(error, info) {
         // Display fallback UI
-        this.setState({ hasError: true });
+        this.setState({hasError: true});
         // You can also log the error to an error reporting service
-        console.error("Error: "+error+" (info)");
+        console.error("Error: " + error + " (info)");
     }
 
     componentDidMount() {
         this.getUserData();
     }
+
+    componentDidUpdate() {
+        var x = document.getElementsByClassName("tags");
+        for (var i = 0; i < x.length; i++) {
+            x[i].innerHTML = this.showTags(x[i].innerHTML);
+        }
+        console.log("rendering finished");
+    }
+
     getUserData() {
         var that = this;
         let metaCallback = function (metaData) {
@@ -74,7 +84,7 @@ class Dashboard extends Component {
     }
     editProfile() {
         console.debug("edit user profile");
-        this.editorRef.current.setEntity("user", this.state.userData.id, ["id", "projects", "createdAt", "files", "email"]);
+        this.editorRef.current.setEntity("user", this.state.userData.id, ["id", "projects", "createdAt", "files", "email", "tags"]);
         if (this.editorRef.current.state.data === this.state.userData) {
             this.editorRef.current.toggle();
         } else {
@@ -148,7 +158,8 @@ class Dashboard extends Component {
         }
         this.network.callApi("/api/" + entity + "/" + id, formData, headers, "PUT", callback, errorCallback);
     }
-    filter (obj, keys) {
+
+    filter(obj, keys) {
         let result = {}, key;
         for (let i in keys) {
             key = keys[i];
@@ -158,15 +169,25 @@ class Dashboard extends Component {
         }
         return result;
     }
+
+    showTags(tags) {
+        let items = '';
+        let taglist = tags.split(",");
+        for (var i = 0; i < taglist.length; i++) {
+            items += "<li>" + taglist[i] + "</li>";
+        }
+        return "<ul class='taglist'>" + items + "</ul>";
+    }
+
     render() {
-        if(!this.state.user || this.state.status === 401) {
-            window.location.href="/redirect?to=/login&message=your session has expired.";
+        if (!this.state.user || this.state.status === 401) {
+            window.location.href = "/redirect?to=/login&message=your session has expired.";
         }
         let callbacks = this.editEntity.bind(this);
-        this.title = "Welcome "+this.state.user.name;
+        this.title = "Welcome " + this.state.user.name;
         const loading = this.state.loading;
 
-        let user = this.filter(this.state.user, ["id", "name", "email", "image"]);
+        let user = this.filter(this.state.user, ["id", "name", "email", "tags", "image"]);
 
         return(
             <Paper>
