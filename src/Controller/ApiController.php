@@ -5,6 +5,10 @@ namespace App\Controller;
 use App\Entity\Serializer\CustomNormalizer;
 use App\Entity\User;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use ReflectionClass;
@@ -98,11 +102,41 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/search", name="api_search")
      */
-    public function search(Request $request, TokenStorageInterface $tokenStorage): JsonResponse
+    public function search(Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager): JsonResponse
     {
-        $result = ["search" => "results!"];
+        /** @var $connect */
+        $conn = $entityManager->getConnection();
 
-        $response = new JsonResponse($result);
+        $searchterm = $request->get('searchterm') ?: $request->toArray();
+
+        $sql = "
+            SELECT p.id FROM project p
+            WHERE match(`title`,`description`,`tags`) AGAINST ('$searchterm');
+            ";
+
+        $stmt = $conn->prepare($sql);
+        $results = $stmt->executeQuery()->fetchAllAssociative();
+
+        //$entity = Entity\Project::class;
+        $entityClassName = 'App\Entity\Project';
+
+        $entityCollection = [];
+
+        foreach ($results as $result) {
+            /** @var Entity $entity */
+            $entityCollection[] = $this->getDoctrine()->getRepository($entityClassName)->find($result['id']);
+        }
+
+        $serializedData = $this->serializer->serialize(
+            $entityCollection,
+            'json',
+            ['groups' => 'list']
+        );
+
+        // returns an array of arrays (i.e. a raw data set)
+        //$resultSet = ["results" => $results];
+
+        $response = new JsonResponse($serializedData);
         return $response;
     }
 }

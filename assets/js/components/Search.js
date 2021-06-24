@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Button from "@material-ui/core/Button";
 import Network from "../classes/Network";
+import NestedList from "../classes/NestedList";
 
 class Search extends BaseComponent {
     network = undefined;
@@ -14,6 +15,9 @@ class Search extends BaseComponent {
         console.log(window.REACT_SERVER_PROPS);
         this.network = new Network(this, window.REACT_SERVER_PROPS.token);
         this.state = {
+            data: {},
+            originalData: {},
+            loading: false,
             user: window.REACT_SERVER_PROPS.user
         };
     }
@@ -23,16 +27,26 @@ class Search extends BaseComponent {
     }
 
     submitSearch(e) {
-        console.debug("start searching for " + this.state.searchterm);
+        let that = this;
+        this.setState({loading: true});
+        console.debug(this.state);
+        console.debug("start searching for " + this.state.data.searchterm);
         var callback = function (result) {
-            console.debug("search result:");
+            console.debug("search results:");
             console.debug(result);
+            let results = JSON.parse(result);
+            that.setState({loading: false, searchResults: results});
         }
         var errorCallback = function (error) {
-            console.debug("an error occurred during search:");
-            console.debug(error.response);
+            that.setState({loading: false, error: error.response});
+            console.debug(error);
         }
-        this.network.callApi('/api/search', this.state, undefined, 'GET', callback, errorCallback);
+        this.network.callApi('/api/search', {searchterm: this.state.data.searchterm}, undefined, 'GET', callback, errorCallback);
+    }
+
+    showEntry(data, action, event) {
+        console.debug(action + " entry");
+        console.debug(data);
     }
 
     render() {
@@ -74,6 +88,24 @@ class Search extends BaseComponent {
                             .resetData
                             .bind(this)}>Reset</Button>
                 </div>
+                {this.state.loading ? (
+                    <div className={'row text-center'}>
+                        <span className="fa fa-spin fa-spinner fa-4x"></span>
+                    </div>
+                ) : (<span> </span>)}
+                {this.state.searchResults !== undefined &&
+                new NestedList(
+                    [
+                        {name: "show", class: "primary", callback: this.showEntry.bind(this), entity: "project"},
+                    ])
+                    .renderData(
+                        "results",
+                        {"Search Results": this.state.searchResults},
+                        "alternateRows",
+                        1
+                    )
+                }
+
             </div>
         );
     }
