@@ -26,7 +26,9 @@ class Logout extends Component {
         axios.get(`/auth/logout`).then(payload => {
             console.log(payload);
             //this.setState({data: payload, loading: false})
-            window.location.href='/dashboard';
+            setTimeout(function () {
+                window.location.href = '/dashboard'
+            }, 3000);
         })
     }
 
@@ -40,6 +42,10 @@ class Logout extends Component {
                         </div>
 
                         <div>
+                            <p>
+                                You have been successfully signed off your account and will be redirected
+                                homewards in 3 seconds. We hope to see you again soon. Bye!
+                            </p>
                             <div className={'row text-center'}>
                                 <span className="fa fa-spin fa-spinner fa-4x"></span>
                             </div>
