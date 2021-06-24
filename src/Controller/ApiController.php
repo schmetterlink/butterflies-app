@@ -94,4 +94,15 @@ class ApiController extends AbstractController
         $response = new JsonResponse($userData);
         return $response;
     }
+
+    /**
+     * @Route("/api/search", name="api_search")
+     */
+    public function search(Request $request, TokenStorageInterface $tokenStorage): JsonResponse
+    {
+        $result = ["search" => "results!"];
+
+        $response = new JsonResponse($result);
+        return $response;
+    }
 }

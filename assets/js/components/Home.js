@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {Route, Switch,Redirect, Link, withRouter} from 'react-router-dom';
 import Dashboard from "./Dashboard";
+import Search from './Search';
 import Login from './Login';
 import Logout from './Logout';
 import Signup from './Signup';
+import BaseComponent from "./BaseComponent";
 
 class Home extends Component {
     constructor() {
@@ -52,7 +54,8 @@ class Home extends Component {
                 <Switch>
                     <Redirect exact from="/" to="/login"/>
                     <Route path="/dashboard" component={Dashboard}/>
-                    <Route path="/login" component={Login} />
+                    <Route path="/search" component={Search}/>
+                    <Route path="/login" component={Login}/>
                     <Route path="/logout" component={Logout}/>
                     <Route path="/signup" component={Signup}/>
                 </Switch>
