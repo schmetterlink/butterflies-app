@@ -31,6 +31,7 @@ class Network {
 
     callApi(target, data = undefined, headers = undefined, method = "GET", callback = null, errorCallback = null) {
         this.state.loading = true;
+        method = method.toLowerCase();
         let uri = target;
         console.debug("trigger " + method + " request to API (" + uri + ") with token " + this.token + ". headers:");
         if (headers === undefined) {
@@ -41,7 +42,10 @@ class Network {
         }
         console.debug(headers);
         if (data !== undefined) console.debug(data);
-        axios[method.toLowerCase()](
+        if (method === 'get' && data !== undefined && data.params === undefined) {
+            data = {params: data};
+        }
+        axios[method](
             uri,
             data,
             headers
