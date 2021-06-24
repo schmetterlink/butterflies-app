@@ -11,10 +11,12 @@ import {Link} from "react-router-dom";
 import NestedList from "../classes/NestedList";
 import Network from "../classes/Network";
 import Editor from "./Editor";
+import BaseComponent from "./BaseComponent";
 
-class Dashboard extends Component {
+class Dashboard extends BaseComponent {
     network = undefined;
     editor = undefined;
+
     constructor() {
         super();
         this.state = {
@@ -160,24 +162,6 @@ class Dashboard extends Component {
             }
         }
         return result;
-    }
-
-    componentDidUpdate() {
-        var x = document.getElementsByClassName("tags");
-        for (var i = 0; i < x.length; i++) {
-            x[i].querySelectorAll('ul.taglist').forEach(n => n.remove());
-            x[i].innerHTML += this.showTags(x[i].innerHTML);
-        }
-        console.log("rendering finished");
-    }
-
-    showTags(tags) {
-        let items = '';
-        let taglist = tags.split(",");
-        for (var i = 0; i < taglist.length; i++) {
-            items += taglist[i].trim() ? "<li>" + taglist[i].trim() + "</li>" : "";
-        }
-        return "<ul class='taglist'>" + items + "</ul>";
     }
 
     render() {
