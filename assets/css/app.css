@@ -1,4 +1,18 @@
-.row-section{float:left; width:100%; background: #42275a;  /* fallback for old browsers */
+.row-section {
+    float: left;
+    width: 26em;
+}
+
+.row-section h2 {
+    background: linear-gradient(0deg, var(--primary-1), var(--secondary-2));; /* fallback for old browsers */
+    display: block;
+    width: 30em;
+    height: 5em;
+    color: var(--gray-1);
+    margin-bottom: 30px;
+    padding: 5em;
+    font-size: 14px;
+    border-radius: 1em;
 }
 .row-section h2{float:left; width:100%; color:#fff; margin-bottom:30px; font-size: 14px;}
 .row-section h2 span{font-family: 'Libre Baskerville', serif; display:block; font-size:45px; text-transform:none; margin-bottom:20px; margin-top:30px;font-weight:700;}
