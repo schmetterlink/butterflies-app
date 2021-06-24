@@ -119,6 +119,7 @@ ul.taglist {
 
 ul.taglist li {
     float: left;
+    background: linear-gradient(0deg, var(--secondary-3), var(--secondary-1));; /* fallback for old browsers */
     background-color: var(--secondary-3);
     color: var(--gray-1);
     padding: 0 0.25em;
@@ -181,6 +182,7 @@ ul.taglist li {
     background-color: var(--gray-1-75);
     color: var(--gray-1);
 }
+
 .alternateRows tr:hover:nth-child(odd) {
     background-color: var(--gray-1-70);
     color: var(--gray-1);
