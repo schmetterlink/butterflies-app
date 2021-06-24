@@ -3,8 +3,9 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Button from "@material-ui/core/Button";
+import BaseComponent from "./BaseComponent";
 
-class Login extends Component {
+class Login extends BaseComponent {
 
     constructor(props) {
         super(props);
@@ -109,12 +110,12 @@ class Login extends Component {
 
                     <Button
                         type="button"
-                        className="register-btn"
+                        className="reset"
                         variant="contained"
                         color="secondary"
-                        onClick={this
-                            .submitRegistration
-                            .bind(this)}>Register</Button>
+                        onClick={super
+                            .resetInputs
+                            .bind(this)}>Reset</Button>
                 </div>
             </div>
         );

@@ -5,8 +5,7 @@ class BaseComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: undefined,
-            originalData: {}
+            data: undefined
         };
     }
 
@@ -37,13 +36,13 @@ class BaseComponent extends Component {
         this.state.data[e.target.name] = e.target.value;
     }
 
-    resetData(event) {
-        console.debug("resetting data fields");
-        console.debug(this.state);
-        for (let key in this.state.originalData) {
-            this.state.data[key] = this.state.originalData[key];
-        }
-        this.setState({data: this.state.data, originalData: {}});
+    resetInputs(e) {
+        Array.from(document.querySelectorAll("input")).forEach(
+            input => (input.value = "")
+        );
+        this.setState({
+            itemvalues: [{}]
+        });
     }
 }
 

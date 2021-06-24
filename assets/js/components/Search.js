@@ -15,8 +15,7 @@ class Search extends BaseComponent {
         console.log(window.REACT_SERVER_PROPS);
         this.network = new Network(this, window.REACT_SERVER_PROPS.token);
         this.state = {
-            data: {},
-            originalData: {},
+            data: {searchterm: ''},
             loading: false,
             user: window.REACT_SERVER_PROPS.user
         };
@@ -48,6 +47,16 @@ class Search extends BaseComponent {
         console.debug(action + " entry");
         console.debug(data);
     }
+
+    handleChange(e) {
+        this.state.data[e.target.name] = e.target.value;
+    }
+
+    resetInputs(e) {
+        super.resetInputs(e);
+        this.setState({searchResults: undefined});
+    }
+
 
     render() {
         return (
@@ -85,7 +94,7 @@ class Search extends BaseComponent {
                         variant="contained"
                         color="secondary"
                         onClick={this
-                            .resetData
+                            .resetInputs
                             .bind(this)}>Reset</Button>
                 </div>
                 {this.state.loading ? (
