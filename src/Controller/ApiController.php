@@ -110,21 +110,32 @@ class ApiController extends AbstractController
         $searchterm = $request->get('searchterm') ?: $request->toArray();
 
         $sql = "
+            SELECT u.id FROM user u
+            WHERE match(`name`,`position`,`company`,`bio`,`tags`) AGAINST ('$searchterm');
+            ";
+
+        $stmt = $conn->prepare($sql);
+        $results['user'] = $stmt->executeQuery()->fetchAllAssociative();
+
+        $sql = "
             SELECT p.id FROM project p
             WHERE match(`title`,`description`,`tags`) AGAINST ('$searchterm');
             ";
 
         $stmt = $conn->prepare($sql);
-        $results = $stmt->executeQuery()->fetchAllAssociative();
+        $results['project'] = $stmt->executeQuery()->fetchAllAssociative();
 
         //$entity = Entity\Project::class;
-        $entityClassName = 'App\Entity\Project';
 
         $entityCollection = [];
 
-        foreach ($results as $result) {
-            /** @var Entity $entity */
-            $entityCollection[] = $this->getDoctrine()->getRepository($entityClassName)->find($result['id']);
+        foreach ($results as $group => $results) {
+            $entityClassName = 'App\Entity\\' . ucfirst($group);
+            foreach ($results as $result) {
+                $id = $result['id'];
+                /** @var Entity $entity */
+                $entityCollection[$group][$id] = $this->getDoctrine()->getRepository($entityClassName)->find($id);
+            }
         }
 
         $serializedData = $this->serializer->serialize(
