@@ -172,7 +172,7 @@ class Dashboard extends BaseComponent {
         this.title = "Welcome " + this.state.user.name;
         const loading = this.state.loading;
 
-        let user = this.filter(this.state.user, ["id", "name", "email", "tags", "image"]);
+        let user = this.filter(this.state.user, ["id", "name", "email", "company", "position", "bio", "tags", "image"]);
 
         return(
             <Paper>

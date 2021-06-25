@@ -59,6 +59,23 @@ trait UserTrait
      */
     private $name;
 
+    /**
+     * @ORM\Column(type="string", length=60, nullable=true)
+     * @Groups ({"admin", "detail", "list", "edit"})
+     */
+    private $company;
+
+    /**
+     * @ORM\Column(type="string", length=120, nullable=true)
+     * @Groups ({"admin", "detail", "list", "edit"})
+     */
+    private $position;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups ({"admin", "detail", "list", "edit"})
+     */
+    private $bio;
 
     /**
      * @ORM\Column(name="image", type="string", length=250, nullable=true, options={"comment":"uploaded_file"})
