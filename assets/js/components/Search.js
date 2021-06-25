@@ -102,19 +102,36 @@ class Search extends BaseComponent {
                         <span className="fa fa-spin fa-spinner fa-4x"></span>
                     </div>
                 ) : (<span> </span>)}
-                {this.state.searchResults !== undefined &&
-                new NestedList(
-                    [
-                        {name: "show", class: "primary", callback: this.showEntry.bind(this), entity: "project"},
-                    ])
-                    .renderData(
-                        "results",
-                        {"Search Results": this.state.searchResults},
-                        "alternateRows",
-                        1
-                    )
-                }
+                <div>
+                    {this.state.searchResults !== undefined &&
+                    new NestedList(
+                        [
+                            {name: "show", class: "primary", callback: this.showEntry.bind(this), entity: "project"},
+                        ])
+                        .renderData(
+                            "results",
+                            {"Search Results : Projects": this.state.searchResults.project},
+                            "alternateRows",
+                            1
+                        )
 
+                    }
+                </div>
+                <div>
+                    {this.state.searchResults !== undefined &&
+                    new NestedList(
+                        [
+                            {name: "show", class: "primary", callback: this.showEntry.bind(this), entity: "project"},
+                        ])
+                        .renderData(
+                            "results",
+                            {"Search Results : Users": this.state.searchResults.user},
+                            "alternateRows",
+                            1
+                        )
+
+                    }
+                </div>
             </div>
         );
     }
