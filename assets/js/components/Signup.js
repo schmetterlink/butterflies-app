@@ -86,7 +86,7 @@ const SignupForm = () => {
             <div className={"dataForm"}>
                 <h2>Sign up</h2>
                 <div>
-                    We need some personal information* in order to create your hirefly account.
+                    please enter your personal information* in order to create your hirefly account.
                 </div>
                 <div>
                     You already have an account? Please <Link to={"/login"}>login</Link> here.
