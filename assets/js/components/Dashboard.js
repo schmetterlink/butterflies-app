@@ -92,14 +92,14 @@ class Dashboard extends BaseComponent {
         console.debug(action);
         var that = this;
         let callback = function(data) {
-            console.debug("project has been "+action.name+"d.");
+            console.debug(action.entity + " has been " + action.name + "d.");
             that.getUserData();
         }
         if (action.name === "delete") {
             this.network.callApi("/api/" + action.entity + "/" + data.id, undefined, undefined, "DELETE", callback);
         }
         if (action.name === "edit") {
-            this.editorRef.current.setEntity(action.entity,data.id, ["id", "createdAt"]);
+            this.editorRef.current.setEntity(action.entity, data.id, ["id", "createdAt"]);
             if (this.editorRef.current.state.data === data) {
                 this.editorRef.current.toggle();
             } else {
@@ -108,6 +108,21 @@ class Dashboard extends BaseComponent {
             }
             //data.description += " edited";
             //this.network.callApi("project/"+data.id, data, "PUT", callback);
+        }
+        if (action.name === "job") {
+            console.debug("create job for project #" + data.id);
+            this.network.callApi("/api/job", {
+                project: data.id,
+                title: "Job title for project #" + data.id
+            }, undefined, "POST", callback);
+        }
+        if (action.name === "apply") {
+            console.debug("create application for job #" + data.id);
+            this.network.callApi("/api/application", {
+                project: data.project.id,
+                job: data.id,
+                title: "Application title for job #" + data.id
+            }, undefined, "POST", callback);
         }
         console.debug(action.name + " " + action.entity + " #" + data.id);
     }
@@ -200,15 +215,66 @@ class Dashboard extends BaseComponent {
                     </div>
                 ) : (
                     <div>
-                        { new NestedList().renderData("user", user) }
+                        {new NestedList().renderData("user", user)}
                         <Button variant="contained" color="primary" onClick={this.editProfile.bind(this)}>edit
                             Profile</Button>
-                        { new NestedList(
+                        {new NestedList(
                             [
-                                {name: "edit", class: "primary", callback: this.editEntity.bind(this), entity: "project"},
-                                {name: "delete", class: "secondary", callback: this.editEntity.bind(this), entity: "project"}
-                            ]
+                                {
+                                    name: "edit",
+                                    class: "primary",
+                                    callback: this.editEntity.bind(this),
+                                    entity: "application"
+                                },
+                                {
+                                    name: "delete",
+                                    class: "secondary",
+                                    callback: this.editEntity.bind(this),
+                                    entity: "application"
+                                }
+                            ])
+                            .renderData(
+                                "data",
+                                {applications: this.state.userData.applications},
+                                "alternateRows",
+                                1
                             )
+                        }
+                        {new NestedList(
+                            [
+                                {name: "edit", class: "primary", callback: this.editEntity.bind(this), entity: "job"},
+                                {name: "apply", class: "primary", callback: this.editEntity.bind(this), entity: "job"},
+                                {
+                                    name: "delete",
+                                    class: "secondary",
+                                    callback: this.editEntity.bind(this),
+                                    entity: "job"
+                                }
+                            ])
+                            .renderData(
+                                "data",
+                                {jobs: this.state.userData.jobs},
+                                "alternateRows",
+                                1
+                            )
+                        }
+                        {new NestedList(
+                            [
+                                {
+                                    name: "edit",
+                                    class: "primary",
+                                    callback: this.editEntity.bind(this),
+                                    entity: "project"
+                                },
+                                {name: "job", class: "primary", callback: this.editEntity.bind(this), entity: "file"},
+                                {
+                                    name: "delete",
+                                    class: "secondary",
+                                    callback: this.editEntity.bind(this),
+                                    entity: "project"
+                                }
+                            ]
+                        )
                             .renderData(
                                 "data",
                                 {projects: this.state.userData.projects},

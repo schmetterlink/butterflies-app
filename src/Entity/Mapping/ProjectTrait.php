@@ -51,6 +51,18 @@ trait ProjectTrait
     private $tags;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Job", mappedBy="project", fetch="EAGER")
+     * @Groups ({"admin", "detail"})
+     */
+    private $jobs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Application", mappedBy="project", fetch="EAGER")
+     * @Groups ({"admin", "detail"})
+     */
+    private $applications;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\File", mappedBy="project", fetch="EAGER")
      * @Groups ({"admin", "detail"})
      */

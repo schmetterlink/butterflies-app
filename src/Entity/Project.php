@@ -26,7 +26,7 @@ class Project
     /**
      * Project constructor.
      */
-    public function __construct(User $user, $title = '', $description = '')
+    public function __construct(User $user = null, $title = '', $description = '')
     {
         $this->user = $user;
         $this->setTitle($title);
@@ -118,5 +118,30 @@ class Project
         return $this->files;
     }
 
+
+    /**
+     * @Serializer\SerializedName("jobs")
+     * @Serializer\Groups({"admin", "detail", "list"})
+     * @Serializer\MaxDepth(2)
+     *
+     * @return Collection
+     */
+    public function getJobs(): Collection
+    {
+        return $this->jobs;
+    }
+
+
+    /**
+     * @Serializer\SerializedName("applications")
+     * @Serializer\Groups({"admin", "detail", "list"})
+     * @Serializer\MaxDepth(2)
+     *
+     * @return Collection
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
 
 }

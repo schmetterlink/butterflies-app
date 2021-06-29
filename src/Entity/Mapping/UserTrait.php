@@ -4,7 +4,9 @@
 namespace App\Entity\Mapping;
 
 
+use App\Entity\Application;
 use App\Entity\File;
+use App\Entity\Job;
 use App\Entity\Project;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -96,6 +98,18 @@ trait UserTrait
     private $projects;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Application", mappedBy="user", fetch="EAGER")
+     * @Groups ({"admin", "detail"})
+     */
+    private $applications;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Job", mappedBy="user", fetch="EAGER")
+     * @Groups ({"admin", "detail"})
+     */
+    private $jobs;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\File", mappedBy="user", fetch="EAGER")
      * @Groups ({"admin", "detail"})
      */
@@ -113,6 +127,22 @@ trait UserTrait
     public function getProjects(): Collection
     {
         return $this->projects;
+    }
+
+    /**
+     * @return Collection|Application[]
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    /**
+     * @return Collection|Job[]
+     */
+    public function getJobs(): Collection
+    {
+        return $this->jobs;
     }
 
     /**

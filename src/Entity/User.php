@@ -143,9 +143,33 @@ class User implements UserInterface
      *
      * @return Collection
      */
-    public function getFiles() {
+    public function getFiles()
+    {
         return $this->files;
     }
+
+    /**
+     * @Serializer\SerializedName("applications")
+     * @Serializer\Groups({"admin", "list", "detail"})
+     *
+     * @return Collection
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * @Serializer\SerializedName("jobs")
+     * @Serializer\Groups({"admin", "list", "detail"})
+     *
+     * @return Collection
+     */
+    public function getJobs()
+    {
+        return $this->jobs;
+    }
+
 
     /**
      * Returning a salt is only needed, if you are not using a modern
