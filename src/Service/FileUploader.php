@@ -6,6 +6,7 @@ use Exception;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Parameter;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -143,7 +144,7 @@ class FileUploader
             }
             return $parsedContent;
         }
-        throw new Exception('FileUploader only accepts multipart/form-data encoded content');
+        throw new BadRequestException('FileUploader only accepts multipart/form-data encoded content');
     }
 
     public function pathTemplate($template, $replacements)
