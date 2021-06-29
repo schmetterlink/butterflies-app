@@ -48,7 +48,14 @@ class CrudController extends AbstractController
     /** @var FileUploader $uplaoder */
     private $uploader;
 
-
+    /**
+     * CrudController constructor.
+     * @param TokenStorageInterface $tokenStorage
+     * @param EntityManagerInterface $manager
+     * @param LoggerInterface $logger
+     * @param ValidatorInterface $validator
+     * @param FileUploader $uploader
+     */
     public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $manager, LoggerInterface $logger, ValidatorInterface $validator, FileUploader $uploader)
     {
         $this->manager = $manager;
@@ -146,6 +153,10 @@ class CrudController extends AbstractController
     }
 
     /**
+     * @param string $entityName
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ReflectionException
      * @Route("/api/{entityName}", name="api_crud_add", methods={"POST"})
      */
     public function add(string $entityName, Request $request): JsonResponse
@@ -159,6 +170,9 @@ class CrudController extends AbstractController
     }
 
     /**
+     * @param string $entityNames
+     * @param string $fieldNames
+     * @return JsonResponse
      * @Route("/api/meta/{entityNames}/{fieldNames}", name="api_crud_get_meta", methods={"GET"}, defaults={"fieldNames"=""})
      */
     public function getMetaData(string $entityNames, string $fieldNames): JsonResponse
@@ -206,13 +220,17 @@ class CrudController extends AbstractController
     }
 
     /**
+     *
+     * @param string $entityName
+     * @param string $id
+     * @param Request $request
+     * @param FileUploader $fileUploader
+     * @return JsonResponse
+     * @throws ReflectionException
      * @Route("/api/{entityName}/{id}", name="api_crud_update", methods={"PUT"})
      */
     public function update(string $entityName, string $id, Request $request, FileUploader $fileUploader): JsonResponse
     {
-        /** @var Entity\User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-
         /** @var \Doctrine\ORM\Mapping\Entity $entity */
         $entity = $this->getDoctrine()->getRepository($this->getEntityClassName($entityName))->find($id);
 
@@ -228,13 +246,19 @@ class CrudController extends AbstractController
         return new JsonResponse(["data" => $entity, "headers" => $request->headers->all()], 201);
 
     }
-    private function getEntityClassName($entityName):? string {
-        if (substr($entityName,0,1) === "\\") {
+
+    /**
+     * @param $entityName
+     * @return string|null
+     */
+    private function getEntityClassName($entityName): ?string
+    {
+        if (substr($entityName, 0, 1) === "\\") {
             return $entityName;
         }
-        $entityClassName = "\App\Entity\\".ucfirst($entityName);
+        $entityClassName = "\App\Entity\\" . ucfirst($entityName);
         if (!class_exists($entityClassName)) {
-            $entityClassName = "\Entity\\".ucfirst($entityName);
+            $entityClassName = "\Entity\\" . ucfirst($entityName);
         }
         return $entityClassName;
     }
