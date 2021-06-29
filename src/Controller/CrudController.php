@@ -262,7 +262,12 @@ class CrudController extends AbstractController
         }
         return $entityClassName;
     }
+
     /**
+     * @param string $entityName
+     * @param string $id
+     * @param Request $request
+     * @return JsonResponse
      * @Route("/api/{entityName}/{id}", name="api_crud_delete", methods={"DELETE"})
      */
     public function delete(string $entityName, string $id, Request $request): JsonResponse
