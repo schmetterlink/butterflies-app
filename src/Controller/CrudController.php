@@ -150,7 +150,7 @@ class CrudController extends AbstractController
      */
     public function add(string $entityName, Request $request): JsonResponse
     {
-        $entity = $this->deserialize($entityName, $request);
+        $entity = $this->deserialize($entityName, $request, "POST");
 
         /** TODO: check permissions and ownership before creating entity */
         $this->manager->persist($entity);
