@@ -38,11 +38,6 @@ class File
         return $this->project;
     }
 
-    public function getProjectId(): ?int
-    {
-        return $this->projectId;
-    }
-
     public function setProject(int|Project $project): self
     {
         if ($project instanceof Project) {
@@ -50,13 +45,6 @@ class File
         } else {
             $this->setProjectId($project);
         }
-        return $this;
-    }
-
-    public function setProjectId(int $projectId): self
-    {
-        $this->projectId = $projectId;
-
         return $this;
     }
 

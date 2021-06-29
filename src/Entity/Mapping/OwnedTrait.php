@@ -1,26 +1,18 @@
 <?php
 namespace App\Entity\Mapping;
 
+use Symfony\Component\Serializer\Annotation as Serializer;
 use App\Entity\User;
 
 trait OwnedTrait
 {
+
     /**
-     * @ORM\Column(name="user_id", type="integer", options={"unsigned"=true})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="users")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Serializer\Groups ({"admin", "detail"})
      */
-    private $userId;
-
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(int $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
+    private $user;
 
     public function getUser(): ?User
     {

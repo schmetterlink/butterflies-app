@@ -26,18 +26,8 @@ trait FileTrait
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="files")
-     * @Serializer\Groups ({"admin", "detail"})
-     */
-    private $user;
-
-    /**
-     * @ORM\Column(name="project_id", type="integer", nullable=true, options={"unsigned"=true})
-     */
-    private $projectId;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Project", inversedBy="files")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
      * @Serializer\Groups ({"admin", "detail", "list"})
      */
     private $project;
