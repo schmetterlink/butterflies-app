@@ -14,6 +14,7 @@ use phpDocumentor\Reflection\Types\Integer;
 /**
  * @ORM\Entity (repositoryClass=FileRepository::class)
  */
+#[ApiResource]
 class File
 {
     use FileTrait, OwnedTrait, TimestampTrait;
