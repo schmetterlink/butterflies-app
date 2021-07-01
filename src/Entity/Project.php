@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Mapping\OwnedTrait;
 use App\Entity\Mapping\ProjectTrait;
 use App\Entity\Mapping\TimestampTrait;
@@ -18,6 +19,7 @@ use Symfony\Component\Serializer\Annotation as Serializer;
 /**
  * @ORM\Entity(repositoryClass=ProjectRepository::class)
  */
+#[ApiResource]
 class Project
 {
     use ProjectTrait, OwnedTrait, TimestampTrait;

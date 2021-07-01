@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Mapping\TimestampTrait;
 use App\Entity\Mapping\UserTrait;
 use App\Repository\UserRepository;
@@ -14,6 +15,7 @@ use Symfony\Component\Serializer\Annotation as Serializer;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
+#[ApiResource]
 class User implements UserInterface
 {
     use UserTrait, TimestampTrait;
